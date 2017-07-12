@@ -15,4 +15,5 @@ public interface Lector {
     public void activar();
     public void desactivar();
     public String getCodigo();
+    public void start();
 }
