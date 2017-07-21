@@ -1,6 +1,6 @@
-package DeviceHardware;
+package Hardware;
 
-import HardwareProxy.Lector;
+import HardwareInterfaz.Lector;
 import java.lang.String;
 import com.pi4j.io.gpio.exception.UnsupportedBoardType;
 import com.pi4j.io.serial.*;
@@ -45,7 +45,7 @@ public class RFID extends Thread implements Lector {
                    int n= event.length(); //Se obtiene el numero de bytes del buffer serial
                    //El codigo que envia el lector es de 12 bytes 
                    //pero se reciben primero 8, y despues 4
-                   if(n==12){
+                   if(n==12){ //ACCIONES A REALIZAR CUANDO SE RECIBE EL CODIGO
                         setCodigo(event.getAsciiString().substring(0, 10));
                         event.discardData();
                    }

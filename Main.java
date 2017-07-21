@@ -1,6 +1,10 @@
 
-import DeviceHardware.RFID;
-import HardwareProxy.Lector;
+import Hardware.CamaraWeb;
+import Hardware.Movimiento;
+import Hardware.RFID;
+import HardwareInterfaz.Camara;
+import HardwareInterfaz.Lector;
+import HardwareInterfaz.Sensor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,17 +20,34 @@ public class Main {
   
     public static void main(String[] args) {
         
-        Lector Rfid = new RFID();
-        Rfid.start();
-        
+        //Sensor mov = new Movimiento();
+       // mov.start();
+       Camara cam = new CamaraWeb();
+       
+       cam.capturaVideo(5);
+       /*
         try {
-            Thread.sleep(5000);
+            Thread.sleep(10000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         
+        cam.capturaFoto();
+       
+        try {
+            Thread.sleep(10000);
         } catch (InterruptedException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+         cam.capturaFoto();
+        
+        */
+        
+        
+        /*
         System.out.println("Desactivado");
-        Rfid.desactivar();
+        mov.desactivar();
         
         try {
             Thread.sleep(10000);
@@ -35,8 +56,8 @@ public class Main {
         }
         
         System.out.println("Activado");
-        Rfid.activar();
-        
+        mov.activar();
+     */   
     }
      
 }
