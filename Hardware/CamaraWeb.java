@@ -9,10 +9,15 @@ import java.io.IOException;
  */ 
 public class CamaraWeb extends Thread implements Camara{
     
+    private int port; //Puerto de acceso a la camara web
+    
     /**
      * Crea un nuevo objeto CamaraWeb. 
      */
-    public CamaraWeb(){}
+    public CamaraWeb(int port){
+    
+        this.port= port;
+    }
             
     
     /**
@@ -46,7 +51,7 @@ public class CamaraWeb extends Thread implements Camara{
     @Override
     public void capturaFoto(){
         try {
-            String cmd = "curl http://localhost:8080/0/action/snapshot"; 
+            String cmd = "curl http://localhost:"+port+"/0/action/snapshot"; 
             Runtime.getRuntime().exec(cmd); 
         } 
         catch (IOException ioe) {

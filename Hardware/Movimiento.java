@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Hardware;
 
 import HardwareInterfaz.Sensor;
@@ -12,23 +7,29 @@ import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import java.lang.String;
 
 /**
- *
- * @author Bien-Resiale
+ * Clase que interactua con el sensor de movimiento PIR. 
+ * 
+ * @author Bien Christpher - Resiale Juan
  */
 public class Movimiento extends Thread implements Sensor {
     
     private String informacion;
     private GpioController gpio;
-    GpioPinDigitalInput myButton;
+    private GpioPinDigitalInput myButton;
+    private Pin pin;
     
     /**
      * Crea un nuevo objeto Movimiento. 
+     * 
+     * @param pin Número del GPIO donde se conecta el sensor de movimiento.
+     * Posibles: 0 a 29 (límites incluidos).
+     * @see "http://pi4j.com/pins/model-3b-rev1.html"
      */
-    public Movimiento(){
-        
+    public Movimiento(int pin){
         informacion = new String();
         gpio = null; 
         myButton = null;
+        this.pin = RaspiPin.getPinByAddress(pin);
     }
     
     /**
@@ -98,7 +99,7 @@ public class Movimiento extends Thread implements Sensor {
     @Override
     public void configurar(){
         gpio = GpioFactory.getInstance(); //Se crea un controlador gpio 
-        myButton = gpio.provisionDigitalInputPin(RaspiPin.GPIO_02, PinPullResistance.PULL_DOWN);
+        myButton = gpio.provisionDigitalInputPin(pin, PinPullResistance.PULL_DOWN);
         myButton.setShutdownOptions(true);
     }
     

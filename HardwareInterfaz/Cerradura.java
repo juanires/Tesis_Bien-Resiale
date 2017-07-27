@@ -10,6 +10,20 @@ package HardwareInterfaz;
 public interface Cerradura {
     
     /**
+     * Comienza la ejecución de acciones del hilo. Invoca al método "run()"
+     * del objeto que implementa esta interfaz.
+     */
+    public void start();
+    
+    /**
+     * Abre la cerradura durante los segundos especificados por el 
+     * parametro "seg".
+     * 
+     * @param seg Tiempo (en segundos) que se mantiene abierta la cerradura.
+     */
+    public void abrir(int seg);
+    
+    /**
      * Activa las funciones de la cerradura. 
      */
     public void activar();
@@ -18,18 +32,10 @@ public interface Cerradura {
      * Desactiva las funciones de la cerradura. 
      */
     public void desactivar();
-    
+                  
     /**
-     * Abre la cerradura durante "seg" segundos.
-     * 
-     * @param seg Cantidad de tiempo en segundos que se mantiene abierta la
-     * cerradura.
+     * Se configura la cerradura. 
      */
-    public void abrir(int seg);
-    
-    /**
-     * Cierra la cerradura.
-     */
-    public void cerrar();
+    public void configurar();
     
 }

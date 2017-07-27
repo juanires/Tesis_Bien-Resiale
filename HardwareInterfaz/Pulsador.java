@@ -17,4 +17,16 @@ public interface Pulsador {
      * Desactiva las funciones del Pulsador. 
      */
     public void desactivar();
+    
+     /**
+     * Comienza la ejecución de acciones del hilo. Invoca al método "run()"
+     * del objeto que implementa esta interfaz.
+     */
+    public void start();
+    
+    
+    /**
+     * Se configura el pulsador. 
+     */
+    public void configurar();
 }
