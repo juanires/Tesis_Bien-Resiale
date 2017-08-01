@@ -12,7 +12,10 @@ public class CamaraWeb extends Thread implements Camara{
     private int port; //Puerto de acceso a la camara web
     
     /**
-     * Crea un nuevo objeto CamaraWeb. 
+     * Crea un nuevo objeto CamaraWeb.
+     * @param port Puerto de donde se obtiene la imágen. Se corresponde con
+     * el puerto establecido para la configuracion de Motion en su archivo
+     * de configuración.
      */
     public CamaraWeb(int port){
     
@@ -29,7 +32,14 @@ public class CamaraWeb extends Thread implements Camara{
     @Override
     public void run(){
         
-        
+        capturaFoto();
+        try {
+                Thread.sleep(20000);
+            } 
+            catch (InterruptedException ex) {
+                System.err.println("Error sleep Thread");
+            }
+        capturaFoto();
     }
     
     /**

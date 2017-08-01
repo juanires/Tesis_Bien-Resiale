@@ -1,10 +1,13 @@
 
+import BaseDeDatos.Sqlite3;
 import Hardware.Boton;
 import Hardware.CamaraWeb;
 import Hardware.Campana;
+import Hardware.Electrocerradura;
 import Hardware.Movimiento;
 import Hardware.RFID;
 import HardwareInterfaz.Camara;
+import HardwareInterfaz.Cerradura;
 import HardwareInterfaz.Lector;
 import HardwareInterfaz.Pulsador;
 import HardwareInterfaz.Sensor;
@@ -24,8 +27,50 @@ public class Main {
   
     public static void main(String[] args) {
         
-        Sonido cam = new Campana(3);
+        Sqlite3 bsd = new Sqlite3("/home/pi/Documents/ProyectoIntegrador/BaseDeDatos/database.sqlite");
+        //Sqlite3 bsd = new Sqlite3("/ramDisk/ram0/database.sqlite");
+       
+        
+       System.out.println(bsd.usuarioRegistrado("5000AA7B9E"));
+       
+        /*Sonido camp = new Campana(3);
+        Lector rfid = new RFID();
+        Sensor mov = new Movimiento(4);
+        Cerradura cerr = new Electrocerradura(0,5);
+        Camara cam = new CamaraWeb(8083);
+        Pulsador pul = new Boton(2);
+        
+        camp.start();
+         try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        rfid.start();
+         try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        mov.start();
+         try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         cam.start();
+         try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        cerr.start();
+         try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        pul.start();
       // Camara cam = new CamaraWeb(8083);
       /* 
      //  cam.capturaVideo(5);

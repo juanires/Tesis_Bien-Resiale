@@ -49,7 +49,13 @@ public class Electrocerradura extends Thread implements Cerradura {
         
         //ACCIONES QUE REALIZA EL OBJETO
         //------------------------------------
-        
+        abrir(tiempo);
+        try {
+                Thread.sleep(5000);
+            } 
+            catch (InterruptedException ex) {
+                System.err.println("Error sleep Thread");
+            }
         //-------------------------------------
         }
     }

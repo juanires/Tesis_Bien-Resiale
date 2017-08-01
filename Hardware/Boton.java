@@ -8,7 +8,7 @@ import java.lang.String;
 /**
  * Clase que interactua con el hardware pulsador. 
  * 
- * @author Bien Christpher - Resiale Juan
+ * @author Bien Christopher - Resiale Juan
  */
 
 
@@ -50,7 +50,7 @@ public class Boton extends Thread implements Pulsador {
                 // Acciones a realizar cuando se recibe un nivel alto
                 if(event.getState().toString()=="HIGH"){
                     
-                    System.out.println(" --> GPIO PIN STATE HIGH ");
+                    System.out.println(" SE PRESIONO EL PULSADOR ");
                     
                     try { //A continuacion se duerme el hilo para ignorar los rebotes
                         Thread.sleep(400);

@@ -9,7 +9,7 @@ import HardwareInterfaz.Sonido;
 /**
  * Clase que interactua con una campana o bocina. 
  * 
- * @author Bien Christpher - Resiale Juan
+ * @author Bien Christopher - Resiale Juan
  */ 
 public class Campana extends Thread implements Sonido {
     
@@ -47,6 +47,14 @@ public class Campana extends Thread implements Sonido {
         while(true) {
             //ACCIONES QUE REALIZA EL OBJETO
         //------------------------------------
+        encender();
+        try {
+                Thread.sleep(5000);
+            } 
+            catch (InterruptedException ex) {
+                System.err.println("Error sleep Thread");
+            }
+        apagar();
         
         //-------------------------------------
         }

@@ -9,7 +9,7 @@ import java.lang.String;
 /**
  * Clase que interactua con el sensor de movimiento PIR. 
  * 
- * @author Bien Christpher - Resiale Juan
+ * @author Bien Christopher - Resiale Juan
  */
 public class Movimiento extends Thread implements Sensor {
     
@@ -48,10 +48,11 @@ public class Movimiento extends Thread implements Sensor {
                
                 // Acciones a realizar cuando se recibe un nivel alto
                 if(event.getState().toString()=="HIGH"){
-                    setInfo("HIGH");
+                   // setInfo("HIGH");
+                   System.out.println("SE DETECTO MOVIMIENTO");
                 }
-                setInfo("LOW");
-                System.out.println(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
+               // setInfo("LOW");
+               // System.out.println(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
             }
         });
         while(true) {
