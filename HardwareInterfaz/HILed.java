@@ -1,12 +1,12 @@
 package HardwareInterfaz;
 
 /**
- * Interfaz para controlar dispositivos Led. Describe todas las operaciones sobre
- * el Led.
+ * Interfaz para controlar dispositivos HILed. Describe todas las operaciones sobre
+ el HILed.
  * 
  * @author Bien Christopher - Resiale Juan
  */
-public interface Led {
+public interface HILed {
     
     /**
      * Comienza la ejecución de acciones del hilo. Invoca al método "run()"

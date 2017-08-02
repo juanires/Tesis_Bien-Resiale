@@ -4,14 +4,14 @@ import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
-import HardwareInterfaz.Sonido;
+import HardwareInterfaz.HISonido;
 
 /**
  * Clase que interactua con una campana o bocina. 
  * 
  * @author Bien Christopher - Resiale Juan
  */ 
-public class Campana extends Thread implements Sonido {
+public class Campana extends Thread implements HISonido {
     
     
     private GpioController gpio;

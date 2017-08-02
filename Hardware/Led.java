@@ -1,18 +1,18 @@
 package Hardware;
 
-import HardwareInterfaz.Led;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
+import HardwareInterfaz.HILed;
 
 /**
  * Clase que interactua con disposivo de LED. 
  * 
  * @author Bien Christopher - Resiale Juan
  */ 
-public class LedPin implements Led{
+public class Led implements HILed{
     
     private GpioController gpio;
     private GpioPinDigitalOutput pin;
@@ -25,7 +25,7 @@ public class LedPin implements Led{
      * Posibles: 0 a 29 (límites incluidos).
      * @see "http://pi4j.com/pins/model-3b-rev1.html"
      */
-    public LedPin(int pin){
+    public Led(int pin){
     
         gpio= null;
         this.pin = null;

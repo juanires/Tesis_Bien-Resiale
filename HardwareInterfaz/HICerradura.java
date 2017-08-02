@@ -7,7 +7,7 @@ package HardwareInterfaz;
  * @author Bien Christpher - Resiale Juan
  */
 
-public interface Cerradura {
+public interface HICerradura {
     
     /**
      * Comienza la ejecución de acciones del hilo. Invoca al método "run()"

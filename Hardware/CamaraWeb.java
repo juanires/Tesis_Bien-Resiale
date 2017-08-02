@@ -1,13 +1,13 @@
 package Hardware;
-import HardwareInterfaz.Camara;
 import java.io.IOException;
+import HardwareInterfaz.HICamara;
 
 /**
  * Clase que interactua con una cámara. 
  * 
  * @author Bien Christpher - Resiale Juan
  */ 
-public class CamaraWeb extends Thread implements Camara{
+public class CamaraWeb extends Thread implements HICamara{
     
     private int port; //Puerto de acceso a la camara web
     

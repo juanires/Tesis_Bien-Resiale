@@ -1,18 +1,18 @@
 package Hardware;
 
-import HardwareInterfaz.Lector;
 import java.lang.String;
 import com.pi4j.io.gpio.exception.UnsupportedBoardType;
 import com.pi4j.io.serial.*;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import HardwareInterfaz.HILector;
 
 /**
  *
  * @author Compuj
  */
-public class RFID extends Thread implements Lector {
+public class RFID extends Thread implements HILector {
     
     private String codigo;
     private Serial serial;

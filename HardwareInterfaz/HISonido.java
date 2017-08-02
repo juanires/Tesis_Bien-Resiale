@@ -7,7 +7,7 @@ package HardwareInterfaz;
  * @author Bien Christopher - Resiale Juan
  */
 
-public interface Sonido {
+public interface HISonido {
    
     
     /**
@@ -27,12 +27,12 @@ public interface Sonido {
     public void apagar();
     
     /**
-     * Activa las funciones del Sonido. 
+     * Activa las funciones del HISonido. 
      */
     public void activar();
     
     /**
-     * Desactiva las funciones del Sonido. 
+     * Desactiva las funciones del HISonido. 
      */
     public void desactivar();
     

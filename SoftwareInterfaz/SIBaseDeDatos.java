@@ -9,7 +9,7 @@ import java.sql.ResultSet;
  * 
  * @author Bien Christopher - Resiale Juan
  */
-public interface BaseDeDatos {
+public interface SIBaseDeDatos {
     
     /**
     * Conectar a la base de datos. 

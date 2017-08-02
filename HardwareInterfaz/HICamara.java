@@ -7,15 +7,15 @@ package HardwareInterfaz;
  * 
  * @author Bien Christpher - Resiale Juan
  */
-public interface Camara {
+public interface HICamara {
     
     /**
-     * Activa las funciones de la Camara. 
+     * Activa las funciones de la HICamara. 
      */
     public void activar();
     
     /**
-     * Desactiva las funciones de la Camara. 
+     * Desactiva las funciones de la HICamara. 
      */
     public void desactivar();
     

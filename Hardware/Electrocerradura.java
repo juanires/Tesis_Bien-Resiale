@@ -1,17 +1,17 @@
 package Hardware;
-import HardwareInterfaz.Cerradura;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
+import HardwareInterfaz.HICerradura;
 
 /**
  * Clase que interactua con una electrocerradura. 
  * 
  * @author Bien Christopher - Resiale Juan
  */ 
-public class Electrocerradura extends Thread implements Cerradura {
+public class Electrocerradura extends Thread implements HICerradura {
 
     private GpioController gpio;
     private GpioPinDigitalOutput pin;

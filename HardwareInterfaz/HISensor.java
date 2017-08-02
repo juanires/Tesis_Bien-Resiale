@@ -6,7 +6,7 @@ package HardwareInterfaz;
  * 
  * @author Bien Christpher - Resiale Juan
  */
-public interface Sensor {
+public interface HISensor {
        
     /**
      * Activa las funciones del sensor. 

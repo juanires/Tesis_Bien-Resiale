@@ -6,15 +6,15 @@ package HardwareInterfaz;
  * @author Bien Christpher - Resiale Juan
  */
 
-public interface Pulsador {
+public interface HIPulsador {
     
     /**
-     * Activa las funciones del Pulsador.
+     * Activa las funciones del HIPulsador.
      */
     public void activar();
     
     /**
-     * Desactiva las funciones del Pulsador. 
+     * Desactiva las funciones del HIPulsador. 
      */
     public void desactivar();
     

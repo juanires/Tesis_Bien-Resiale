@@ -6,7 +6,7 @@ package HardwareInterfaz;
  * @author Bien Christpher - Resiale Juan
  */
 
-public interface Lector {
+public interface HILector {
     
     public void activar();
     public void desactivar();

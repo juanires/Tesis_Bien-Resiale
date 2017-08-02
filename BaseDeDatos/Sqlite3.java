@@ -1,7 +1,6 @@
 
 package BaseDeDatos;
 
-import SoftwareInterfaz.BaseDeDatos;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -9,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import SoftwareInterfaz.SIBaseDeDatos;
 
 /**
  * Clase que interactua con una base de datos SQLite. 
@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * 
  * @author Bien Christopher - Resiale Juan
  */
-public class Sqlite3 implements BaseDeDatos {
+public class Sqlite3 implements SIBaseDeDatos {
     
     private String url; 
     private Connection conexion;

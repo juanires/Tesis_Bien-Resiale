@@ -1,19 +1,23 @@
 
 import BaseDeDatos.Sqlite3;
+import ControladorDeServicios.Controlador;
 import Hardware.Boton;
 import Hardware.CamaraWeb;
 import Hardware.Campana;
 import Hardware.Electrocerradura;
 import Hardware.Movimiento;
 import Hardware.RFID;
-import HardwareInterfaz.Camara;
-import HardwareInterfaz.Cerradura;
-import HardwareInterfaz.Lector;
-import HardwareInterfaz.Pulsador;
-import HardwareInterfaz.Sensor;
-import HardwareInterfaz.Sonido;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import HardwareInterfaz.HIPulsador;
+import HardwareInterfaz.HISensor;
+import HardwareInterfaz.HISonido;
+import HardwareInterfaz.HICamara;
+import HardwareInterfaz.HICerradura;
+import HardwareInterfaz.HILector;
+import Servicios.Servicio;
+import SoftwareInterfaz.SIControladorDeServicios;
+import SoftwareInterfaz.SIServicio;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -27,18 +31,18 @@ public class Main {
   
     public static void main(String[] args) {
         
-        Sqlite3 bsd = new Sqlite3("/home/pi/Documents/ProyectoIntegrador/BaseDeDatos/database.sqlite");
-        //Sqlite3 bsd = new Sqlite3("/ramDisk/ram0/database.sqlite");
-       
+       Controlador cont = new Controlador();
         
-       System.out.println(bsd.usuarioRegistrado("5000AA7B9E"));
+       cont.agregarServicio(new Servicio ("freeswitch"));
        
-        /*Sonido camp = new Campana(3);
-        Lector rfid = new RFID();
-        Sensor mov = new Movimiento(4);
-        Cerradura cerr = new Electrocerradura(0,5);
-        Camara cam = new CamaraWeb(8083);
-        Pulsador pul = new Boton(2);
+        System.out.println(cont.cargarTodosLosServicios());
+       
+        /*HISonido camp = new Campana(3);
+        HILector rfid = new RFID();
+        HISensor mov = new Movimiento(4);
+        HICerradura cerr = new Electrocerradura(0,5);
+        HICamara cam = new CamaraWeb(8083);
+        HIPulsador pul = new Boton(2);
         
         camp.start();
          try {
@@ -71,7 +75,7 @@ public class Main {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
         pul.start();
-      // Camara cam = new CamaraWeb(8083);
+      // HICamara cam = new CamaraWeb(8083);
       /* 
      //  cam.capturaVideo(5);
         cam.capturaFoto();

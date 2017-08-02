@@ -1,10 +1,10 @@
 package Hardware;
-import HardwareInterfaz.Pulsador;
-import HardwareInterfaz.Sensor;
 import com.pi4j.io.gpio.*;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import java.lang.String;
+import HardwareInterfaz.HIPulsador;
+import HardwareInterfaz.HISensor;
 /**
  * Clase que interactua con el hardware pulsador. 
  * 
@@ -12,7 +12,7 @@ import java.lang.String;
  */
 
 
-public class Boton extends Thread implements Pulsador {
+public class Boton extends Thread implements HIPulsador {
     
     private GpioController gpio;
     private GpioPinDigitalInput myButton;

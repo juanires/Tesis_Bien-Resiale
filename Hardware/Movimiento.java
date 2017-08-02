@@ -1,17 +1,17 @@
 package Hardware;
 
-import HardwareInterfaz.Sensor;
 import com.pi4j.io.gpio.*;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import java.lang.String;
+import HardwareInterfaz.HISensor;
 
 /**
  * Clase que interactua con el sensor de movimiento PIR. 
  * 
  * @author Bien Christopher - Resiale Juan
  */
-public class Movimiento extends Thread implements Sensor {
+public class Movimiento extends Thread implements HISensor {
     
     private String informacion;
     private GpioController gpio;
