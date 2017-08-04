@@ -5,30 +5,44 @@ import SoftwareInterfaz.SIServicio;
 import java.util.ArrayList;
 
 /**
- *
- * @author Compuj
+ * Clase para controlar uno o más servicios. 
+ * Describe todas las operaciones sobre el grupo de servicios.
+ * 
+ * @author Bien Christopher - Resiale Juan
  */
 public class Controlador implements SIControladorDeServicios {
     
     private ArrayList <SIServicio> servicios;
     
+    /**
+    * Crea un nuevo controlador. 
+    */
     public Controlador(){
-        
         servicios = new ArrayList<SIServicio>();
     }
     
-    
+    /**
+    * Agregar servicio al controlador. 
+    * 
+    * @param servicio El servicio que se quiere agregar al controlador.
+    */
     @Override
     public void agregarServicio(SIServicio servicio){
         
         servicios.add(servicio);
-        
     }
     
+    /**
+    * Cargar e iniciar el servicio. Se verifica que sea un servicio cargado
+    * previamente en el controlador, y si es así se lo intenta iniciar.
+    * 
+    * @param servicio Servicio a iniciar.
+    * @return 1 si el servicio se ha iniciado correctamente, de lo contrario
+    * retorna 0.
+    */
     @Override
-    public int cargarServicio(SIServicio servicio){
+    public int iniciarServicio(SIServicio servicio){
       
-        //Si se corresponde con un servicio agregado al controlador, se intenta cargar
         for(int i=0; i<servicios.size();i++){ 
             if(servicio.getNombre() == servicios.get(i).getNombre()){
                 
@@ -38,8 +52,14 @@ public class Controlador implements SIControladorDeServicios {
         return 0;
     }
     
+     /**
+    * Iniciar todos los servicios del controlador. 
+    * 
+    * @return 1 si todos los servicios del controlador se han iniciado
+    * correctamente, de lo contrario retorna 0.
+    */
     @Override
-    public int cargarTodosLosServicios(){
+    public int iniciarTodosLosServicios(){
         
         int cargados=0;
         for(int i=0; i<servicios.size();i++){
@@ -56,6 +76,13 @@ public class Controlador implements SIControladorDeServicios {
         }
     }
     
+    /**
+    * Estado de un servicio del controlador. Debe ser un servicio agregado
+    * previamente al controlador.
+    * 
+    * @param servicio Servicio del que se quiere conocer el estado.
+    * @return 1 si el servicio se encuentra activo, de lo contrario retorna 0.
+    */
     @Override
     public int estadoServicio(SIServicio servicio){
         
@@ -69,6 +96,12 @@ public class Controlador implements SIControladorDeServicios {
         return 0;
     }
     
+    /**
+    * Estado de todos los servicios del controlador. 
+    * 
+    * @return 1 si todos los servicios del controlador se encuentra activos, 
+    * de lo contrario retorna 0.
+    */
     @Override
     public int estadoTodosLosServicios(){
         
@@ -87,6 +120,11 @@ public class Controlador implements SIControladorDeServicios {
         }
     }
     
+    /**
+    * Iniciar los servicios caidos. Se reinician los servicios del controlador
+    * que se encuentren inactivos.
+    *
+    */
     @Override
     public void cargarServiciosCaidos(){
          
@@ -97,11 +135,13 @@ public class Controlador implements SIControladorDeServicios {
         } 
     }
     
+     /**
+    * Imprime por pantalla una lista de los servicios del controlador. 
+    */
     @Override
     public void listarServicios(){
         for(int i=0; i<servicios.size();i++){
-            System.out.print("Servicio: "+servicios.get(i).getNombre());
-            System.out.print(" Estado: "+servicios.get(i).estado());
+            System.out.println("Servicio: "+servicios.get(i).getNombre()+" Estado: "+servicios.get(i).estado());
         }
     }
 }

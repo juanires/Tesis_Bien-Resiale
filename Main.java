@@ -19,6 +19,7 @@ import Servicios.Servicio;
 import SoftwareInterfaz.SIControladorDeServicios;
 import SoftwareInterfaz.SIServicio;
 
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -31,12 +32,20 @@ public class Main {
   
     public static void main(String[] args) {
         
-       Controlador cont = new Controlador();
+     SIControladorDeServicios cont = new Controlador();
+     SIServicio servi= new Servicio("freeswitch");  
+     SIServicio servi2= new Servicio("motion");  
+     
+     cont.agregarServicio(servi);
+     cont.agregarServicio(servi2);
+     
+        cont.listarServicios();
+       
+    //   cont.agregarServicio(servi);
+    
         
-       cont.agregarServicio(new Servicio ("freeswitch"));
        
-        System.out.println(cont.cargarTodosLosServicios());
-       
+        
         /*HISonido camp = new Campana(3);
         HILector rfid = new RFID();
         HISensor mov = new Movimiento(4);
