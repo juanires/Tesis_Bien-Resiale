@@ -12,18 +12,20 @@ import HardwareInterfaz.HILector;
  *
  * @author Compuj
  */
-public class RFID extends Thread implements HILector {
+public class RFID implements HILector {
     
     private String codigo;
     private Serial serial;
-    
+    private SerialDataEventListener listener;
+   
     public RFID(){
         codigo=new String("");
         serial = SerialFactory.createInstance();
+        listener=null;
     }
     
     @Override
-    public void run(){
+    public void start(){
     
         configurar();
         try {
@@ -32,41 +34,9 @@ public class RFID extends Thread implements HILector {
         catch (IOException ex) {
             Logger.getLogger(RFID.class.getName()).log(Level.SEVERE, null, ex);
         }
+        listener();
         
-        serial.addListener(new SerialDataEventListener() {
-
-            @Override
-            public void dataReceived(SerialDataEvent event) {
-                
-                try {
-                    
-                    //Es muy importante leer los datos recibidos del puerto serie. 
-                    //Si no se lee el búfer de recepción, éste continuará creciendo y consumiendo memoria.
-                   int n= event.length(); //Se obtiene el numero de bytes del buffer serial
-                   //El codigo que envia el lector es de 12 bytes 
-                   //pero se reciben primero 8, y despues 4
-                   if(n==12){ //ACCIONES A REALIZAR CUANDO SE RECIBE EL CODIGO
-                        setCodigo(event.getAsciiString().substring(0, 10));
-                        event.discardData();
-                   }
-                   else {
-                       if(n>12) //Si por alguna razon hay mas de 12 bytes, se limpia el buffer
-                         event.discardData();
-                   }
-                } 
-                catch (IOException ex) {
-                    System.err.println("Error al leer puerto serie");
-                }
-            }
-        });
-        while (true){
-            try {
-                Thread.sleep(2000);
-            } 
-            catch (InterruptedException ex) {
-                System.err.println("Error sleep Thread");
-            }
-        }
+        serial.addListener(listener);
     }
     
     @Override
@@ -117,5 +87,33 @@ public class RFID extends Thread implements HILector {
     private void setCodigo(String cod){
         codigo= cod;
         System.out.println(codigo);
+    }
+    
+    private void listener(){
+        
+        listener = new SerialDataEventListener() {
+            @Override
+            public void dataReceived(SerialDataEvent event) {
+                
+                try {
+                    //Es muy importante leer los datos recibidos del puerto serie. 
+                    //Si no se lee el búfer de recepción, éste continuará creciendo y consumiendo memoria.
+                   int n= event.length(); //Se obtiene el numero de bytes del buffer serial
+                   //El codigo que envia el lector es de 12 bytes 
+                   //pero se reciben primero 8, y despues 4
+                   if(n==12){ //ACCIONES A REALIZAR CUANDO SE RECIBE EL CODIGO
+                        setCodigo(event.getAsciiString().substring(0, 10));
+                        event.discardData();
+                   }
+                   else {
+                       if(n>12) //Si por alguna razon hay mas de 12 bytes, se limpia el buffer
+                         event.discardData();
+                   }
+                } 
+                catch (IOException ex) {
+                    System.err.println("Error al leer puerto serie");
+                }
+            }
+        };
     }
 }

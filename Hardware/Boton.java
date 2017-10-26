@@ -5,6 +5,7 @@ import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import java.lang.String;
 import HardwareInterfaz.HIPulsador;
 import HardwareInterfaz.HISensor;
+import java.util.ArrayList;
 /**
  * Clase que interactua con el hardware pulsador. 
  * 
@@ -12,11 +13,13 @@ import HardwareInterfaz.HISensor;
  */
 
 
-public class Boton extends Thread implements HIPulsador {
+public class Boton implements HIPulsador {
     
     private GpioController gpio;
     private GpioPinDigitalInput myButton;
+    private GpioPinListenerDigital listener;
     private Pin pin;
+    private String estado;
     
     /**
      * Crea un nuevo objeto Boton. 
@@ -25,54 +28,22 @@ public class Boton extends Thread implements HIPulsador {
      * Posibles: 0 a 29 (límites incluidos).
      * @see "http://pi4j.com/pins/model-3b-rev1.html"
      */
-    public Boton(int pin){
+    public Boton(GpioController gpio, int pin){
     
-        gpio = null; 
+        estado = new String("LOW");
+        this.gpio = gpio; 
         myButton = null;
+        listener=null;
         this.pin = RaspiPin.getPinByAddress(pin);
     }
     
-    /**
-     * El hilo comienza la ejecucion de acciones determinadas.
-     * En el interior de este método se detallan las acciones que debe 
-     * ejecutar el hilo cuando se invoque a la funcion "start()"
-     * del objeto Boton.
-     */
-    @Override
-    public void run(){
-    
-        configurar();
-        
-        myButton.addListener(new GpioPinListenerDigital() {
-            @Override
-            public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-               
-                // Acciones a realizar cuando se recibe un nivel alto
-                if(event.getState().toString()=="HIGH"){
-                    
-                    System.out.println(" SE PRESIONO EL PULSADOR ");
-                    
-                    try { //A continuacion se duerme el hilo para ignorar los rebotes
-                        Thread.sleep(400);
-                    } 
-                    catch (InterruptedException ex) {
-                    }
-                }
-                //setInfo("LOW");
-                //System.out.println(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
-            }
-        });
-        while(true) {
-            try {
-                Thread.sleep(500);
-            } 
-            catch (InterruptedException ex) {
-                System.err.println("Error sleep Thread");
-            }
-        }
+    public void start(){
+         configurar();
+       listener();
+       gpio.addListener(listener, myButton);
         
     }
-           
+      
     /**
      * Activa las funciones del objeto Boton.
      */
@@ -97,9 +68,25 @@ public class Boton extends Thread implements HIPulsador {
      */
     @Override
     public void configurar(){
-        gpio = GpioFactory.getInstance(); //Se crea un controlador gpio 
         myButton = gpio.provisionDigitalInputPin(pin, PinPullResistance.PULL_DOWN);
         myButton.setShutdownOptions(true);
+        myButton.setDebounce(500);
+        
     }
     
+    public void listener(){
+        
+       listener= new GpioPinListenerDigital() {
+            @Override
+            public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
+                // Acciones a realizar cuando se recibe un nivel alto
+                if(event.getState().toString().equals("HIGH")){
+                 
+                   System.out.println(" SE PRESIONO EL PULSADOR 1 "+ myButton.getName());
+                   //AQUI SE REALIZAN LOS DISPAROS DEL MONITOR
+                }
+            }
+        };
+        
+    }   
 }

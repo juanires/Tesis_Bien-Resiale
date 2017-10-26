@@ -5,19 +5,21 @@ import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import java.lang.String;
 import HardwareInterfaz.HISensor;
+import Monitor.Monitor;
+import java.util.ArrayList;
 
 /**
  * Clase que interactua con el sensor de movimiento PIR. 
  * 
  * @author Bien Christopher - Resiale Juan
  */
-public class Movimiento extends Thread implements HISensor {
+public class Movimiento implements HISensor {
     
-    private String informacion;
     private GpioController gpio;
     private GpioPinDigitalInput myButton;
+    private GpioPinListenerDigital listener;
     private Pin pin;
-    
+    private String informacion;
     /**
      * Crea un nuevo objeto Movimiento. 
      * 
@@ -25,10 +27,12 @@ public class Movimiento extends Thread implements HISensor {
      * Posibles: 0 a 29 (límites incluidos).
      * @see "http://pi4j.com/pins/model-3b-rev1.html"
      */
-    public Movimiento(int pin){
-        informacion = new String();
-        gpio = null; 
+    public Movimiento(GpioController gpio,int pin){
+        
+        informacion = new String("LOW");
+        this.gpio = gpio; 
         myButton = null;
+        listener=null;
         this.pin = RaspiPin.getPinByAddress(pin);
     }
     
@@ -39,30 +43,26 @@ public class Movimiento extends Thread implements HISensor {
      * del objeto Movimiento.
      */
     @Override
-    public void run(){
-    
+    public void start(){
         configurar();
-        myButton.addListener(new GpioPinListenerDigital() {
+        activarListener();
+        gpio.addListener(listener, myButton);
+    }
+    
+    public void activarListener(){
+      
+        listener= new GpioPinListenerDigital() {
+            
             @Override
             public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-               
                 // Acciones a realizar cuando se recibe un nivel alto
-                if(event.getState().toString()=="HIGH"){
-                   // setInfo("HIGH");
-                   System.out.println("SE DETECTO MOVIMIENTO");
+                if(event.getState().toString().equals("HIGH")){
+                 
+                    System.out.println(" MOVIMIENTO");
+                   //AQUIE SE REALIZAN LOS DISPAROS DEL MONITOR
                 }
-               // setInfo("LOW");
-               // System.out.println(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
             }
-        });
-        while(true) {
-            try {
-                Thread.sleep(500);
-            } 
-            catch (InterruptedException ex) {
-                System.err.println("Error sleep Thread");
-            }
-        }
+        };
     }
     
     /**
@@ -99,7 +99,6 @@ public class Movimiento extends Thread implements HISensor {
      */
     @Override
     public void configurar(){
-        gpio = GpioFactory.getInstance(); //Se crea un controlador gpio 
         myButton = gpio.provisionDigitalInputPin(pin, PinPullResistance.PULL_DOWN);
         myButton.setShutdownOptions(true);
     }

@@ -1,24 +1,17 @@
 
 import BaseDeDatos.Sqlite3;
 import ControladorDeServicios.Controlador;
-import Hardware.Boton;
-import Hardware.CamaraWeb;
-import Hardware.Campana;
-import Hardware.Electrocerradura;
-import Hardware.Movimiento;
-import Hardware.RFID;
+import Hardware.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import HardwareInterfaz.HIPulsador;
-import HardwareInterfaz.HISensor;
-import HardwareInterfaz.HISonido;
-import HardwareInterfaz.HICamara;
-import HardwareInterfaz.HICerradura;
-import HardwareInterfaz.HILector;
+import HardwareInterfaz.*;
+import Monitor.*;
 import Servicios.Servicio;
-import SoftwareInterfaz.SIControladorDeServicios;
-import SoftwareInterfaz.SIServicio;
-
+import SoftwareInterfaz.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -32,15 +25,34 @@ public class Main {
   
     public static void main(String[] args) {
         
-     SIControladorDeServicios cont = new Controlador();
-     SIServicio servi= new Servicio("freeswitch");  
-     SIServicio servi2= new Servicio("motion");  
-     
-     cont.agregarServicio(servi);
-     cont.agregarServicio(servi2);
-     
-        cont.listarServicios();
-       
+        int [] transCam = {4};
+        int [] transPuls = {10,11};
+      
+    ProcesadorPetri proc = new ProcesadorPetri(16,13, "/home/pi/ProyectoIntegrador/MatrizIncidencia.txt","/home/pi/ProyectoIntegrador/MatrizEstado.txt");
+    //ProcesadorPetri proc = new ProcesadorPetri(16,13, "/home/pi/Documents/ProyectoIntegrador/MatrizPrograma/MatrizIncidencia.txt","/home/pi/Documents/ProyectoIntegrador/MatrizPrograma/MatrizEstado.txt");
+    Monitor moni = new Monitor(proc);
+   // HICamara cam = new CamaraWeb(8083,moni,transCam,1);
+    GpioController gpio = GpioFactory.getInstance();
+    HIPulsador pulsador2 = new Boton(gpio,4);
+    //HIPulsador pulsador = new Boton(gpio,5,moni, transPuls,2);
+    
+   // HISensor mov = new Movimiento(gpio,5,moni, transPuls,2);
+    HILector rfid = new RFID();
+    rfid.start();
+    pulsador2.start();   
+   
+    while(true){
+    try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+   //pulsador.start();   
+    
+    //mov.start();
+    //cam.start();
+   
     //   cont.agregarServicio(servi);
     
         

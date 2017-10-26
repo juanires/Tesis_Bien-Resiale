@@ -1,6 +1,7 @@
 package Hardware;
 import java.io.IOException;
 import HardwareInterfaz.HICamara;
+import java.util.ArrayList;
 
 /**
  * Clase que interactua con una cámara. 
@@ -10,7 +11,7 @@ import HardwareInterfaz.HICamara;
 public class CamaraWeb extends Thread implements HICamara{
     
     private int port; //Puerto de acceso a la camara web
-    
+       
     /**
      * Crea un nuevo objeto CamaraWeb.
      * @param port Puerto de donde se obtiene la imágen. Se corresponde con
@@ -20,8 +21,7 @@ public class CamaraWeb extends Thread implements HICamara{
     public CamaraWeb(int port){
     
         this.port= port;
-    }
-            
+    }     
     
     /**
      * El hilo comienza la ejecucion de acciones determinadas.
@@ -32,14 +32,20 @@ public class CamaraWeb extends Thread implements HICamara{
     @Override
     public void run(){
         
-        capturaFoto();
-        try {
+     while (true){
+        
+         //AQUI SE REALIZAN LOS DISPAROS DEL MONITOR
+         capturaFoto();
+         
+     }
+        
+    /*    try {
                 Thread.sleep(20000);
             } 
             catch (InterruptedException ex) {
                 System.err.println("Error sleep Thread");
             }
-        capturaFoto();
+        capturaFoto();*/
     }
     
     /**
