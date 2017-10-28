@@ -42,7 +42,7 @@ public class RFID implements HILector {
     @Override
     public void activar(){
         if(serial.isClosed()){
-            configurar();       
+            start();
         }
     }
     

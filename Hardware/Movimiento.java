@@ -57,9 +57,9 @@ public class Movimiento implements HISensor {
             public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
                 // Acciones a realizar cuando se recibe un nivel alto
                 if(event.getState().toString().equals("HIGH")){
-                 
+                  //AQUIE SE REALIZAN LOS DISPAROS DEL MONITOR
                     System.out.println(" MOVIMIENTO");
-                   //AQUIE SE REALIZAN LOS DISPAROS DEL MONITOR
+                  
                 }
             }
         };
@@ -70,7 +70,7 @@ public class Movimiento implements HISensor {
      */
     @Override
     public void activar(){
-        configurar();        
+        gpio.addListener(listener, myButton);      
     }
     
     /**
@@ -78,7 +78,7 @@ public class Movimiento implements HISensor {
      */
     @Override
     public void desactivar(){
-        gpio.shutdown(); //detiene todas las actividades / subprocesos de GPIO cerrando el controlador GPIO 
+       gpio.removeListener(listener, myButton);
     }
     
     /**
@@ -101,6 +101,7 @@ public class Movimiento implements HISensor {
     public void configurar(){
         myButton = gpio.provisionDigitalInputPin(pin, PinPullResistance.PULL_DOWN);
         myButton.setShutdownOptions(true);
+        myButton.setDebounce(5);
     }
     
     /**

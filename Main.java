@@ -25,28 +25,38 @@ public class Main {
   
     public static void main(String[] args) {
         
-        int [] transCam = {4};
-        int [] transPuls = {10,11};
+     
       
-    ProcesadorPetri proc = new ProcesadorPetri(16,13, "/home/pi/ProyectoIntegrador/MatrizIncidencia.txt","/home/pi/ProyectoIntegrador/MatrizEstado.txt");
-    //ProcesadorPetri proc = new ProcesadorPetri(16,13, "/home/pi/Documents/ProyectoIntegrador/MatrizPrograma/MatrizIncidencia.txt","/home/pi/Documents/ProyectoIntegrador/MatrizPrograma/MatrizEstado.txt");
-    Monitor moni = new Monitor(proc);
+ 
    // HICamara cam = new CamaraWeb(8083,moni,transCam,1);
     GpioController gpio = GpioFactory.getInstance();
     HIPulsador pulsador2 = new Boton(gpio,4);
-    //HIPulsador pulsador = new Boton(gpio,5,moni, transPuls,2);
-    
+   // HIPulsador pulsador = new Boton(gpio,5);
+    HISonido camp = new Campana(gpio,5);
    // HISensor mov = new Movimiento(gpio,5,moni, transPuls,2);
     HILector rfid = new RFID();
     rfid.start();
     pulsador2.start();   
-   
+    camp.start();
+    
     while(true){
-    try {
-            Thread.sleep(1000);
+        try {
+            Thread.sleep(6000);
         } catch (InterruptedException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        System.out.println("Desactivado");
+       
+        rfid.desactivar();
+        try {
+            Thread.sleep(6000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    
+        System.out.println("ACTIVADO");
+        rfid.activar();
     }
    //pulsador.start();   
     

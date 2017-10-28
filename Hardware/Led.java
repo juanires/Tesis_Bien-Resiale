@@ -17,6 +17,7 @@ public class Led implements HILed{
     private GpioController gpio;
     private GpioPinDigitalOutput pin;
     private int numPin;
+    private boolean habilitado;
     
     /**
      * Crea un nuevo objeto LedPin. 
@@ -25,11 +26,12 @@ public class Led implements HILed{
      * Posibles: 0 a 29 (límites incluidos).
      * @see "http://pi4j.com/pins/model-3b-rev1.html"
      */
-    public Led(int pin){
+    public Led(GpioController gpio, int pin){
     
-        gpio= null;
+        this.gpio = gpio;
         this.pin = null;
         numPin = pin;
+        habilitado = true;
     }
     
     /**
@@ -53,7 +55,7 @@ public class Led implements HILed{
      */
     @Override
     public void activar(){
-        configurar();
+         habilitado = true;
     }
     
     /**
@@ -61,7 +63,7 @@ public class Led implements HILed{
      */
     @Override
     public void desactivar(){
-        gpio.shutdown();    
+         habilitado = false;    
     }
         
     /**
@@ -71,7 +73,7 @@ public class Led implements HILed{
      */
     @Override
     public void configurar(){
-       gpio = GpioFactory.getInstance();
        pin = gpio.provisionDigitalOutputPin(RaspiPin.getPinByAddress(numPin),PinState.LOW);
+       pin.setShutdownOptions(true, PinState.LOW);
     }
 }

@@ -38,10 +38,9 @@ public class Boton implements HIPulsador {
     }
     
     public void start(){
-         configurar();
+       configurar();
        listener();
        gpio.addListener(listener, myButton);
-        
     }
       
     /**
@@ -49,7 +48,7 @@ public class Boton implements HIPulsador {
      */
     @Override
     public void activar(){
-        configurar(); 
+        gpio.addListener(listener, myButton);
     }
     
     /**
@@ -57,7 +56,7 @@ public class Boton implements HIPulsador {
      */
     @Override
     public void desactivar(){
-         gpio.shutdown(); //detiene todas las actividades / subprocesos de GPIO cerrando el controlador GPIO
+         gpio.removeListener(listener, myButton); 
     }
     
      /**
@@ -87,6 +86,5 @@ public class Boton implements HIPulsador {
                 }
             }
         };
-        
     }   
 }

@@ -17,6 +17,7 @@ public class Campana extends Thread implements HISonido {
     private GpioController gpio;
     private GpioPinDigitalOutput pin;
     private int numPin;
+    private boolean habilitado;
     
     
     /**
@@ -26,11 +27,12 @@ public class Campana extends Thread implements HISonido {
      * Posibles: 0 a 29 (límites incluidos).
      * @see "http://pi4j.com/pins/model-3b-rev1.html"
      */
-    public Campana(int pin){
+    public Campana(GpioController gpio,int pin){
     
-        gpio= null;
+        this.gpio= gpio;
         this.pin = null;
         numPin = pin;
+        habilitado = true;
     }
     
     /**
@@ -47,15 +49,16 @@ public class Campana extends Thread implements HISonido {
         while(true) {
             //ACCIONES QUE REALIZA EL OBJETO
         //------------------------------------
-        encender();
-        try {
-                Thread.sleep(5000);
-            } 
-            catch (InterruptedException ex) {
-                System.err.println("Error sleep Thread");
+            if(habilitado){
+                encender();
+                try {
+                    Thread.sleep(5000);
+                } 
+                catch (InterruptedException ex) {
+                    System.err.println("Error sleep Thread");
+                }
+                apagar();
             }
-        apagar();
-        
         //-------------------------------------
         }
     }
@@ -82,7 +85,7 @@ public class Campana extends Thread implements HISonido {
      */
     @Override
     public void activar(){
-        configurar();
+        habilitado = true;
     }
     
     /**
@@ -90,7 +93,7 @@ public class Campana extends Thread implements HISonido {
      */
     @Override
     public void desactivar(){
-        gpio.shutdown();    
+       habilitado = false;   
     }
     
     
@@ -101,7 +104,8 @@ public class Campana extends Thread implements HISonido {
      */
     @Override
     public void configurar(){
-       gpio = GpioFactory.getInstance();
+       //gpio = GpioFactory.getInstance();
        pin = gpio.provisionDigitalOutputPin(RaspiPin.getPinByAddress(numPin),PinState.LOW);
+       pin.setShutdownOptions(true, PinState.LOW);
     }
 }

@@ -17,6 +17,7 @@ public class Electrocerradura extends Thread implements HICerradura {
     private GpioPinDigitalOutput pin;
     private int numPin;
     private int tiempo;
+    private boolean habilitado;
     
     /**
      * Crea un nuevo objeto Electrocerradura.
@@ -27,12 +28,13 @@ public class Electrocerradura extends Thread implements HICerradura {
      * electrocerradura.
      * @see "http://pi4j.com/pins/model-3b-rev1.html"
      */
-    public Electrocerradura(int pin, int tiempo){
+    public Electrocerradura(GpioController gpio, int pin, int tiempo){
     
-        gpio= null;
+        this.gpio= gpio;
         this.pin = null;
         numPin = pin;
         this.tiempo = tiempo;
+        habilitado = true;
     }
     
     /**
@@ -83,7 +85,7 @@ public class Electrocerradura extends Thread implements HICerradura {
      */
     @Override
     public void activar(){
-        configurar();
+        habilitado = true;
     }
 
     /**
@@ -91,7 +93,7 @@ public class Electrocerradura extends Thread implements HICerradura {
      */
     @Override
     public void desactivar(){
-        gpio.shutdown();    
+        habilitado = false;   
     }
                  
     /**
@@ -101,7 +103,7 @@ public class Electrocerradura extends Thread implements HICerradura {
      */
     @Override
     public void configurar(){
-       gpio = GpioFactory.getInstance();
-       pin = gpio.provisionDigitalOutputPin(RaspiPin.getPinByAddress(numPin),PinState.LOW);
+        pin = gpio.provisionDigitalOutputPin(RaspiPin.getPinByAddress(numPin),PinState.LOW);
+        pin.setShutdownOptions(true, PinState.LOW);
     }
 }
