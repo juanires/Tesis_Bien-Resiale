@@ -1,70 +1,40 @@
-package Hardware;
-
-import java.lang.String;
+package ConcreteDevice;
+import Device.Device;
+import Monitor.Monitor;
+import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.exception.UnsupportedBoardType;
-import com.pi4j.io.serial.*;
+import com.pi4j.io.serial.Baud;
+import com.pi4j.io.serial.DataBits;
+import com.pi4j.io.serial.FlowControl;
+import com.pi4j.io.serial.Parity;
+import com.pi4j.io.serial.Serial;
+import com.pi4j.io.serial.SerialConfig;
+import com.pi4j.io.serial.SerialDataEvent;
+import com.pi4j.io.serial.SerialDataEventListener;
+import com.pi4j.io.serial.SerialFactory;
+import com.pi4j.io.serial.StopBits;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import HardwareInterfaz.HILector;
 
 /**
  *
  * @author Compuj
  */
-public class RFID implements HILector {
-    
-    private String codigo;
+public class SerialComunications  extends Device {
+
     private Serial serial;
     private SerialDataEventListener listener;
-   
-    public RFID(){
-        codigo=new String("");
+    
+    public SerialComunications(){
+    
         serial = SerialFactory.createInstance();
         listener=null;
     }
     
     @Override
-    public void start(){
-    
-        configurar();
-        try {
-            serial.discardInput(); //Se borra el buffer de recepcion
-        } 
-        catch (IOException ex) {
-            Logger.getLogger(RFID.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        listener();
-        
-        serial.addListener(listener);
-    }
-    
-    @Override
-    public void activar(){
-        if(serial.isClosed()){
-            start();
-        }
-    }
-    
-    @Override
-    public void desactivar(){
-        if(serial.isOpen()){
-            try {
-            serial.close();
-            } 
-            catch (IOException ex) {
-                 System.err.println("Error al cerrar puerto serie");
-            }
-        }
-    }
-    
-    @Override
-    public String getCodigo(){
-        return codigo;
-    }
-    
-    private  void configurar(){
-         // create serial config object
+    protected void configure() {
+        // create serial config object
         SerialConfig config = new SerialConfig();
         //Se establecen las configuraciones del puerto serial
         try {
@@ -83,15 +53,30 @@ public class RFID implements HILector {
             System.err.println("Error al abrir puerto serie");
         }
     }
-    
-    private void setCodigo(String cod){
-        codigo= cod;
-        System.out.println(codigo);
+
+    @Override
+    public void start() {
+        configure();
+        activeListener();
+        active(true);
+    }
+
+    @Override
+    public void active(boolean option) {
+        if (option){
+            cleanBuffer();
+            serial.addListener(listener);
+            setActive(option);
+        }
+        else {
+            serial.removeListener(listener);
+            setActive(option);
+        }
     }
     
-    private void listener(){
-        
-        listener = new SerialDataEventListener() {
+     private void activeListener(){
+         
+          listener = new SerialDataEventListener() {
             @Override
             public void dataReceived(SerialDataEvent event) {
                 
@@ -101,8 +86,9 @@ public class RFID implements HILector {
                    int n= event.length(); //Se obtiene el numero de bytes del buffer serial
                    //El codigo que envia el lector es de 12 bytes 
                    //pero se reciben primero 8, y despues 4
-                   if(n==12){ //ACCIONES A REALIZAR CUANDO SE RECIBE EL CODIGO
-                        setCodigo(event.getAsciiString().substring(0, 10));
+                   if(n==12){ 
+                    //ACCIONES A REALIZAR CUANDO SE RECIBE EL CODIGO
+                        System.err.println(event.getAsciiString().substring(0, 10));
                         event.discardData();
                    }
                    else {
@@ -115,5 +101,12 @@ public class RFID implements HILector {
                 }
             }
         };
-    }
+     }
+    
+    private void cleanBuffer(){
+         try {
+            serial.discardInput(); //Se borra el buffer de recepcion
+        } 
+        catch (IOException ex) {}
+     }
 }

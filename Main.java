@@ -1,6 +1,9 @@
 
 import BaseDeDatos.Sqlite3;
+import ConcreteDeviceFactory.*;
 import ControladorDeServicios.Controlador;
+import Device.Device;
+import Factory.*;
 import Hardware.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,11 +25,35 @@ import com.pi4j.io.gpio.GpioFactory;
 
 
 public class Main {
-  
     public static void main(String[] args) {
+    
+    
+    GpioController gpio = GpioFactory.getInstance();
+    ProcesadorPetri proc = new ProcesadorPetri(16,13,"/home/pi/Documents/ProyectoIntegrador/MatrizPrograma/MatrizIncidencia.txt","/home/pi/Documents/ProyectoIntegrador/MatrizPrograma/MatrizEstado.txt");
+    Monitor mon = new Monitor(proc);
+    int [] trans = {2,3};
+    
+    ArrayList <Device> devices = new ArrayList();
+    DeviceFactory factoryGPIO = new GPIODeviceFactory();
+    DeviceFactory factoryCamera = new CameraDeviceFactory();
+    DeviceFactory FactorySerial = new SerialDeviceFactory();
+    
+    devices.add(factoryGPIO.implementsDevice(mon, trans, "Output1", gpio, 4, "GpioOutput"));
+    devices.add(factoryGPIO.implementsDevice(mon, trans, "Listener2", gpio, 5, "GpioListener"));
+    devices.add(FactorySerial.implementsDevice(mon, trans, "RFID", "SerialComunications"));
+    //try {Thread.sleep(5000);} 
+    //catch (InterruptedException ex) {}
+    
+    
+    while(true){
+        try {Thread.sleep(5000);} 
+        catch (InterruptedException ex) {}
+    
+    }
+    /*
+        int [] arr = {2,3};
         
-     
-      
+        System.out.println(arr[3]);
  
    // HICamara cam = new CamaraWeb(8083,moni,transCam,1);
     GpioController gpio = GpioFactory.getInstance();
@@ -142,6 +169,6 @@ public class Main {
         System.out.println("Activado");
         mov.activar();
      */   
+    
     }
-     
 }
