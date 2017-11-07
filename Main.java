@@ -1,16 +1,11 @@
-
-import BaseDeDatos.Sqlite3;
 import ConcreteDeviceFactory.*;
-import ControladorDeServicios.Controlador;
+import ServiceController.ServiceController;
 import Device.Device;
 import Factory.*;
-import Hardware.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import HardwareInterfaz.*;
 import Monitor.*;
-import Servicios.Servicio;
-import SoftwareInterfaz.*;
+import SoftwareInterface.SIServiceController;
 import java.util.ArrayList;
 import java.util.Collection;
 import com.pi4j.io.gpio.GpioController;
@@ -27,7 +22,20 @@ import com.pi4j.io.gpio.GpioFactory;
 public class Main {
     public static void main(String[] args) {
     
+        
+    SIServiceController controller = new ServiceController();
+
+    controller.addService(ServiceFactory.getService("motion"));
     
+    System.out.println(controller.stopService("motion"));
+    
+    try {Thread.sleep(20000);} 
+    catch (InterruptedException ex) {}
+    System.out.println(controller.startService("motion"));
+    
+    
+        
+   /* 
     GpioController gpio = GpioFactory.getInstance();
     ProcesadorPetri proc = new ProcesadorPetri(16,13,"/home/pi/Documents/ProyectoIntegrador/MatrizPrograma/MatrizIncidencia.txt","/home/pi/Documents/ProyectoIntegrador/MatrizPrograma/MatrizEstado.txt");
     Monitor mon = new Monitor(proc);

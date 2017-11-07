@@ -1,7 +1,6 @@
-package ControladorDeServicios;
-
-import SoftwareInterfaz.SIControladorDeServicios;
-import SoftwareInterfaz.SIServicio;
+package ServiceController;
+import Service.Service;
+import SoftwareInterface.SIServiceController;
 import java.util.ArrayList;
 
 /**
@@ -10,15 +9,15 @@ import java.util.ArrayList;
  * 
  * @author Bien Christopher - Resiale Juan
  */
-public class Controlador implements SIControladorDeServicios {
+public class ServiceController implements SIServiceController {
     
-    private ArrayList <SIServicio> servicios;
+    private ArrayList <Service> services;
     
     /**
     * Crea un nuevo controlador. 
     */
-    public Controlador(){
-        servicios = new ArrayList<SIServicio>();
+    public ServiceController(){
+        services = new ArrayList<Service>();
     }
     
     /**
@@ -27,48 +26,49 @@ public class Controlador implements SIControladorDeServicios {
     * @param servicio El servicio que se quiere agregar al controlador.
     */
     @Override
-    public void agregarServicio(SIServicio servicio){
+    public void addService(Service service){
         
-        servicios.add(servicio);
+        services.add(service);
     }
     
     /**
     * Cargar e iniciar el servicio. Se verifica que sea un servicio cargado
     * previamente en el controlador, y si es así se lo intenta iniciar.
     * 
-    * @param servicio Servicio a iniciar.
+    * @param service Servicio a iniciar.
     * @return 1 si el servicio se ha iniciado correctamente, de lo contrario
     * retorna 0.
     */
     @Override
-    public int iniciarServicio(SIServicio servicio){
+    public int startService(String nameService){
       
-        for(int i=0; i<servicios.size();i++){ 
-            if(servicio.getNombre() == servicios.get(i).getNombre()){
+        for(int i=0; i<services.size();i++){ 
+            if(nameService.equals(services.get(i).getName())){
                 
-                return servicio.iniciar();
+                return services.get(i).start();
             }
         }
         return 0;
     }
     
+   
      /**
-    * Iniciar todos los servicios del controlador. 
+    * Iniciar todos los service del controlador. 
     * 
     * @return 1 si todos los servicios del controlador se han iniciado
     * correctamente, de lo contrario retorna 0.
     */
     @Override
-    public int iniciarTodosLosServicios(){
+    public int startAllServices(){
         
         int cargados=0;
-        for(int i=0; i<servicios.size();i++){
-            cargados += servicios.get(i).iniciar();
+        for(int i=0; i<services.size();i++){
+            cargados += services.get(i).start();
         } 
         
         //Se verifica que se hallan cargado la totalidad de los servicios
         //del controlador
-        if(cargados == servicios.size()){
+        if(cargados == services.size()){
             return 1;
         }
         else {
@@ -76,21 +76,45 @@ public class Controlador implements SIControladorDeServicios {
         }
     }
     
+     public int stopService (String nameService){
+        
+        for(int i=0; i<services.size();i++){ 
+            if(nameService.equals(services.get(i).getName())){
+                
+                return services.get(i).stop();
+            }
+        }
+        return 0;
+    }
+    
+    
+    
+    public int stopAllService (){
+        
+        for(int i=0; i<services.size();i++){ 
+            if(services.get(i).stop() == 0){
+                return 0;
+            }
+        }
+        return 1;
+    }
+    
+    
     /**
     * Estado de un servicio del controlador. Debe ser un servicio agregado
     * previamente al controlador.
     * 
-    * @param servicio Servicio del que se quiere conocer el estado.
+    * @param service Servicio del que se quiere conocer el estado.
     * @return 1 si el servicio se encuentra activo, de lo contrario retorna 0.
     */
     @Override
-    public int estadoServicio(SIServicio servicio){
+    public int stateService(Service service){
         
         //Si se corresponde con un servicio agregado al controlador, se intenta cargar
-        for(int i=0; i<servicios.size();i++){ 
-            if(servicio.getNombre() == servicios.get(i).getNombre()){
+        for(int i=0; i<services.size();i++){ 
+            if(service.getName() == services.get(i).getName()){
                 
-                return servicio.estado();
+                return service.state();
             }
         }
         return 0;
@@ -103,16 +127,16 @@ public class Controlador implements SIControladorDeServicios {
     * de lo contrario retorna 0.
     */
     @Override
-    public int estadoTodosLosServicios(){
+    public int stateAllServices(){
         
         int estados=0;
-        for(int i=0; i<servicios.size();i++){
-            estados += servicios.get(i).estado();
+        for(int i=0; i<services.size();i++){
+            estados += services.get(i).state();
         } 
         
         //Se verifica que se hallan cargado la totalidad de los servicios
         //del controlador
-        if(estados == servicios.size()){
+        if(estados == services.size()){
             return 1;
         }
         else {
@@ -126,11 +150,11 @@ public class Controlador implements SIControladorDeServicios {
     *
     */
     @Override
-    public void cargarServiciosCaidos(){
+    public void restartDroppedService(){
          
-        for(int i=0; i<servicios.size();i++){
-            if(servicios.get(i).estado()== 0){
-                servicios.get(i).reiniciar();
+        for(int i=0; i<services.size();i++){
+            if(services.get(i).state()== 0){
+                services.get(i).restart();
             }
         } 
     }
@@ -139,9 +163,9 @@ public class Controlador implements SIControladorDeServicios {
     * Imprime por pantalla una lista de los servicios del controlador. 
     */
     @Override
-    public void listarServicios(){
-        for(int i=0; i<servicios.size();i++){
-            System.out.println("Servicio: "+servicios.get(i).getNombre()+" Estado: "+servicios.get(i).estado());
+    public void listServices(){
+        for(int i=0; i<services.size();i++){
+            System.out.println("Servicio: "+services.get(i).getName()+" Estado: "+services.get(i).state());
         }
     }
 }

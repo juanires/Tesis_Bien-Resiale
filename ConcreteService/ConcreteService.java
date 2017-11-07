@@ -1,6 +1,5 @@
-package Servicios;
-
-import SoftwareInterfaz.SIServicio;
+package ConcreteService;
+import Service.Service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,14 +8,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Clase que representa un servicio. 
- * Describe todas las operaciones sobre el servicio.
- * 
- * @author Bien Christopher - Resiale Juan
+ *
+ * @author Compuj
  */
-public class Servicio implements SIServicio {
-        
-    private String nombreServicio;
+public class ConcreteService extends Service {
+    
+     private String nameService;
     
     
     /**
@@ -24,8 +21,8 @@ public class Servicio implements SIServicio {
     * 
     * @param servicio Nombre del servicio que se quiere asociar al objeto.
     */
-    public Servicio(String servicio){
-        nombreServicio = servicio;
+    public ConcreteService(String nameService){
+        this.nameService = nameService;
     }
     
     
@@ -38,21 +35,21 @@ public class Servicio implements SIServicio {
     * retorna 0.
     */
     @Override
-    public int iniciar(){
+    public int start(){
         
         try {
-            Process proceso;
-            proceso = Runtime.getRuntime().exec("/etc/init.d/"+nombreServicio+" start");
-            InputStream is = proceso.getInputStream(); 
+            Process process;
+            process = Runtime.getRuntime().exec("/etc/init.d/"+nameService+" start");
+            InputStream is = process.getInputStream(); 
             BufferedReader buffer = new BufferedReader (new InputStreamReader (is));
-            String resultado = buffer.readLine();
+            String result = buffer.readLine();
             
-            if(resultado.contains("Starting "+nombreServicio)){
+            if(result.contains("Starting "+nameService)){
                 return 1;
             }
         } 
         catch (IOException ex) {
-            Logger.getLogger(Servicio.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
         }
         return 0;
     }
@@ -66,21 +63,21 @@ public class Servicio implements SIServicio {
     * retorna 0.
     */
     @Override
-    public int detener(){
+    public int stop(){
         
         try {
-            Process proceso;
-            proceso = Runtime.getRuntime().exec("/etc/init.d/"+nombreServicio+" stop");
-            InputStream is = proceso.getInputStream(); 
+            Process process;
+            process = Runtime.getRuntime().exec("/etc/init.d/"+nameService+" stop");
+            InputStream is = process.getInputStream(); 
             BufferedReader buffer = new BufferedReader (new InputStreamReader (is));
-            String resultado = buffer.readLine();
+            String result = buffer.readLine();
             
-            if(resultado.contains("Stopping "+nombreServicio)){
+            if(result.contains("Stopping "+nameService)){
                 return 1;
             }
         } 
         catch (IOException ex) {
-            Logger.getLogger(Servicio.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
         }
         return 0;
     }
@@ -94,21 +91,21 @@ public class Servicio implements SIServicio {
     * retorna 0.
     */
     @Override
-    public int reiniciar(){
+    public int restart(){
         
         try {
-            Process proceso;
-            proceso = Runtime.getRuntime().exec("/etc/init.d/"+nombreServicio+" restart");
-            InputStream is = proceso.getInputStream(); 
+            Process process;
+            process = Runtime.getRuntime().exec("/etc/init.d/"+nameService+" restart");
+            InputStream is = process.getInputStream(); 
             BufferedReader buffer = new BufferedReader (new InputStreamReader (is));
-            String resultado = buffer.readLine();
+            String result = buffer.readLine();
             
-            if(resultado.contains("Restarting "+nombreServicio)){
+            if(result.contains("Restarting "+nameService)){
                 return 1;
             }
         } 
         catch (IOException ex) {
-            Logger.getLogger(Servicio.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
         }
         return 0;
     }
@@ -120,25 +117,25 @@ public class Servicio implements SIServicio {
     * @return 1 si el servicio se encuentra activo, de lo contrario retorna 0.
     */
     @Override
-    public int estado(){
+    public int state(){
                  
         try {
-            Process proceso;
-            proceso = Runtime.getRuntime().exec("/etc/init.d/"+nombreServicio+" status");
-            InputStream is = proceso.getInputStream(); 
+            Process process;
+            process = Runtime.getRuntime().exec("/etc/init.d/"+nameService+" status");
+            InputStream is = process.getInputStream(); 
             BufferedReader buffer = new BufferedReader (new InputStreamReader (is));
             
             //Se descartan las dos primeras lineas y se lee la tercera
             buffer.readLine();
             buffer.readLine();
-            String resultado = buffer.readLine();
+            String result = buffer.readLine();
             
-            if(resultado.contains("Active: active")){
+            if(result.contains("Active: active")){
                 return 1;
             }
         } 
         catch (IOException ex) {
-            Logger.getLogger(Servicio.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
         }
         
        return 0;
@@ -150,8 +147,9 @@ public class Servicio implements SIServicio {
     * @return Nombre del servicio.
     */
     @Override
-    public String getNombre(){
+    public String getName(){
         
-        return nombreServicio;
+        return nameService;
     }
+    
 }

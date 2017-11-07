@@ -1,6 +1,6 @@
+package ConcreteDataBase;
 
-package BaseDeDatos;
-
+import DataBase.DataBase;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,17 +8,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import SoftwareInterfaz.SIBaseDeDatos;
 
 /**
- * Clase que interactua con una base de datos SQLite. 
- * Describe todas las operaciones sobre la base de datos.
- * 
- * @author Bien Christopher - Resiale Juan
+ *
+ * @author Compuj
  */
-public class Sqlite3 implements SIBaseDeDatos {
+
+public class Sqlite3 extends DataBase  {
     
-    private String url; 
     private Connection conexion;
     
     /**
@@ -103,10 +100,12 @@ public class Sqlite3 implements SIBaseDeDatos {
             registrado = resultado.next();
         } 
         catch (SQLException ex) {
-            Logger.getLogger(Sqlite3.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConcreteDataBase.Sqlite3.class.getName()).log(Level.SEVERE, null, ex);
         }
         desconectar();
         
         return registrado;  
     }
+    
+    
 }

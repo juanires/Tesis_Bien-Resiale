@@ -1,12 +1,10 @@
-package SoftwareInterfaz;
+package Service;
 
 /**
- * Interfaz para interactuar con un servicio. 
- * Describe todas las operaciones sobre el servicio.
- * 
- * @author Bien Christopher - Resiale Juan
+ *
+ * @author Compuj
  */
-public interface SIServicio {
+public abstract class Service {
     
     /**
     * Iniciar el servicio. 
@@ -14,7 +12,7 @@ public interface SIServicio {
     * @return 1 si el servicio se ha iniciado correctamente, de lo contrario
     * retorna 0.
     */
-    int iniciar();
+    abstract public int start();
     
     /**
     * Detiene el servicio. 
@@ -22,7 +20,7 @@ public interface SIServicio {
     * @return 1 si el servicio se detuvo correctamente, de lo contrario
     * retorna 0.
     */
-    int detener();
+    abstract public int stop();
     
     /**
     * Reiniciar el servicio. 
@@ -30,7 +28,7 @@ public interface SIServicio {
     * @return 1 si el servicio se ha reiniciado correctamente, de lo contrario
     * retorna 0.
     */
-    int reiniciar();
+    abstract public int restart();
     
     /**
     * Consultar el estado del servicio. 
@@ -38,12 +36,12 @@ public interface SIServicio {
     * @return 1 si el servicio se encuentra activo, de lo contrario
     * retorna 0.
     */
-    int estado();
+    abstract public int state();
     
     /**
     * Obtener el nombre del servicio. 
     * 
     * @return Nombre del servicio.
     */
-    String getNombre();
+    abstract public String getName();
 }

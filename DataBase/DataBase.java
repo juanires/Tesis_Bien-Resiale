@@ -1,32 +1,30 @@
-
-package SoftwareInterfaz;
+package DataBase;
 
 import java.sql.ResultSet;
 
 /**
- * Interfaz para interactuar con una base de datos. 
- * Describe todas las operaciones sobre la base de datos.
- * 
- * @author Bien Christopher - Resiale Juan
+ *
+ * @author Compuj
  */
-public interface SIBaseDeDatos {
-    
+public abstract class DataBase {
+   
+    protected String url;
     /**
     * Conectar a la base de datos. 
     */
-    void conectar();
+    public abstract void conectar();
         
     /**
     * Desconectar la base de datos. 
     */
-    void desconectar();
+    public abstract void desconectar();
         
     /**
     * Consultar a la base de datos. 
     * @param consulta Consulta sql a ejecutar.
     * @return ResultSet. Retorna el resultado de la consulta.
     */
-    ResultSet consultar(String consulta);
+    public abstract ResultSet consultar(String consulta);
     
     /**
     * Comprobar si es un ususario registrado. Se comprueba si el código
@@ -38,6 +36,5 @@ public interface SIBaseDeDatos {
     * @return true si el codigo corresponde a un usuario registrado, de lo 
     * contrario retorna false.
     */
-    boolean usuarioRegistrado(String codigo);
-    
+    public abstract boolean usuarioRegistrado(String codigo);
 }
