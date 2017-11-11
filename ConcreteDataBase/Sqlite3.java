@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 public class Sqlite3 extends DataBase  {
     
-    private Connection conexion;
+    private Connection connect;
     
     /**
     * Crea un nuevo objeto SQLite3
@@ -25,7 +25,7 @@ public class Sqlite3 extends DataBase  {
     */
     public Sqlite3(String url){
         this.url= url;
-        this.conexion=null;
+        connect();
     }
     
     /**
@@ -33,10 +33,10 @@ public class Sqlite3 extends DataBase  {
     * 
     */
     @Override
-    public void conectar(){
+    public void connect(){
         try {
-            conexion = DriverManager.getConnection("jdbc:sqlite:"+url);
-            if (conexion!=null) {
+            connect = DriverManager.getConnection("jdbc:sqlite:"+url);
+            if (connect!=null) {
                 System.out.println("Conectado");
             }
         }
@@ -49,9 +49,9 @@ public class Sqlite3 extends DataBase  {
     * Desconectar la base de datos. 
     */
     @Override
-    public void desconectar(){
+    public void disconnect(){
         try {
-            conexion.close();
+            connect.close();
         } 
         catch (SQLException ex) {
          System.out.println("Error al cerrar base de datos");   
@@ -60,15 +60,15 @@ public class Sqlite3 extends DataBase  {
     
     /**
     * Consultar a la base de datos. 
-    * @param consulta Consulta sql a ejecutar.
+    * @param consult Consulta sql a ejecutar.
     * @return ResultSet. Retorna el resultado de la consulta.
     */
     @Override
-    public ResultSet consultar(String consulta){
+    public ResultSet consult(String sqlStatement){
         
         ResultSet resultado = null;
         try {
-            PreparedStatement st = conexion.prepareStatement(consulta);
+            PreparedStatement st = connect.prepareStatement(sqlStatement);
             resultado = st.executeQuery();
         } 
         catch (SQLException ex) {
@@ -76,6 +76,19 @@ public class Sqlite3 extends DataBase  {
         }
         
         return resultado;
+    }
+    
+    
+    public int insert(String sqlStatement){
+        try {
+            PreparedStatement st = connect.prepareStatement(sqlStatement);
+            st.execute();
+        } 
+        catch (SQLException ex) {
+            System.err.println(ex.getMessage());
+            return 0;
+        }
+        return 1;
     }
     
     /**
@@ -92,17 +105,17 @@ public class Sqlite3 extends DataBase  {
     @Override
     public boolean usuarioRegistrado(String codigo){
         
-        conectar();
+        connect();
         
         boolean registrado = false;
-        ResultSet resultado = consultar("SELECT * FROM control_datos_usuarios_dj WHERE clave_usuario='"+codigo+"'");
+        ResultSet resultado = consult("SELECT * FROM control_datos_usuarios_dj WHERE clave_usuario='"+codigo+"'");
         try {
             registrado = resultado.next();
         } 
         catch (SQLException ex) {
             Logger.getLogger(ConcreteDataBase.Sqlite3.class.getName()).log(Level.SEVERE, null, ex);
         }
-        desconectar();
+        disconnect();
         
         return registrado;  
     }

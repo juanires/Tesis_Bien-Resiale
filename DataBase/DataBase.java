@@ -12,19 +12,21 @@ public abstract class DataBase {
     /**
     * Conectar a la base de datos. 
     */
-    public abstract void conectar();
+    public abstract void connect();
         
     /**
     * Desconectar la base de datos. 
     */
-    public abstract void desconectar();
+    public abstract void disconnect();
         
     /**
     * Consultar a la base de datos. 
     * @param consulta Consulta sql a ejecutar.
     * @return ResultSet. Retorna el resultado de la consulta.
     */
-    public abstract ResultSet consultar(String consulta);
+    public abstract ResultSet consult(String sqlStatement);
+    
+    public abstract int insert(String sqlStatement);
     
     /**
     * Comprobar si es un ususario registrado. Se comprueba si el código

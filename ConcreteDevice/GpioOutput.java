@@ -53,15 +53,19 @@ public class GpioOutput extends Device implements Runnable {
             catch (InterruptedException ex) {}
      //----------------ACCIONES QUE REALIZA EL HILO-----------------------
             if(active){
+                
+                monitor.disparar(getNextTransitions());
                 pin.high();
                 
-                try {Thread.sleep(5000);} 
-                catch (InterruptedException ex) {}
-                
-                pin.low();
-                
-                try {Thread.sleep(5000);} 
-                catch (InterruptedException ex) {}
+                if(time == 0){
+                    monitor.disparar(getNextTransitions());
+                    pin.low();
+                }
+                else{
+                    try {Thread.sleep(time*1000);} 
+                    catch (InterruptedException ex) {}
+                    pin.low();
+                }
             }
         }
     }

@@ -1,7 +1,9 @@
 package Device;
 
+import DataBase.DataBase;
 import Monitor.Monitor;
 import com.pi4j.io.gpio.GpioController;
+import java.util.List;
 
 
 /**
@@ -11,12 +13,15 @@ import com.pi4j.io.gpio.GpioController;
 public abstract class Device {
     //Campos
     protected Monitor monitor;
-    protected int [] transitions;
+    protected List<Integer> transitions;
     protected String name;
     protected GpioController gpio;
     protected int pinNumber;
     protected int port;
+    protected int time;
     protected boolean active;
+    protected DataBase dataBase;
+    protected int nexTransitions;
    
     
     //Metodos
@@ -28,11 +33,14 @@ public abstract class Device {
         return name;
     }
     
+    public void setDataBase(DataBase dataBase){
+        this.dataBase = dataBase;
+    }
     public void setMonitor(Monitor monitor){
         this.monitor = monitor;
     }
     
-    public void setTransitions(int [] transitions){
+    public void setTransitions(List<Integer> transitions){
         this.transitions = transitions;
     }
     
@@ -52,6 +60,10 @@ public abstract class Device {
         this.port = port;
     }
     
+    public void setTime(int time){
+        this.time = time;
+    }
+    
     public void setActive(boolean active){
         this.active = active;
     }
@@ -60,5 +72,17 @@ public abstract class Device {
         return active;
     }
     
-    
+    protected int getNextTransitions(){
+        
+        int result;
+        if(nexTransitions < transitions.size()){
+           result = transitions.get(nexTransitions);
+           nexTransitions ++;
+        }
+        else{
+            nexTransitions = 0;
+            result = transitions.get(nexTransitions);
+        } 
+        return result;
+    }
 }

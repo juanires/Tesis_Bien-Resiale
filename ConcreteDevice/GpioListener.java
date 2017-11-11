@@ -1,6 +1,7 @@
 package ConcreteDevice;
 
-
+import Readers.ReaderLastSnapshot;
+import Readers.ReaderDate;
 import Device.Device;
 import Monitor.Monitor;
 import com.pi4j.io.gpio.GpioController;
@@ -64,7 +65,12 @@ public class GpioListener extends Device {
                 if(event.getState().toString().equals("HIGH")){
                   //AQUI SE REALIZAN LOS DISPAROS DEL MONITOR
                     System.out.println( name + " HIGH");
-                  
+                    monitor.disparar(getNextTransitions());
+                    monitor.disparar(getNextTransitions());
+                    //Ahora se guarda en base de datos
+                    dataBase.insert("insert into " + name + " (date,snapshot) " + "values ('"+ReaderDate.read()+"','"+ReaderLastSnapshot.read()+"')");
+                    //Se retornan reccursos
+                    monitor.disparar(getNextTransitions());
                 }
             }
         };

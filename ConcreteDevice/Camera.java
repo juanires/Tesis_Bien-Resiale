@@ -44,20 +44,15 @@ public class Camera extends Device implements Runnable {
         }
     }
     
-     @Override
+    @Override
     public void run() {
         
         while(true){
-            try {Thread.sleep(10);} 
-            catch (InterruptedException ex) {}
-     
             if(active){
-            //----------------ACCIONES QUE REALIZA EL HILO-----------------------       
-     
+                //----------------ACCIONES QUE REALIZA EL HILO----------------------- 
+                monitor.disparar(getNextTransitions());
+                takePicture();
             }
         }
     }
-
-    
-    
 }

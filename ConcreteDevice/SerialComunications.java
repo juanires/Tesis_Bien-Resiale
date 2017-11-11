@@ -25,11 +25,13 @@ public class SerialComunications  extends Device {
 
     private Serial serial;
     private SerialDataEventListener listener;
+    private String code;
     
     public SerialComunications(){
     
         serial = SerialFactory.createInstance();
         listener=null;
+        code = null;
     }
     
     @Override
@@ -88,7 +90,9 @@ public class SerialComunications  extends Device {
                    //pero se reciben primero 8, y despues 4
                    if(n==12){ 
                     //ACCIONES A REALIZAR CUANDO SE RECIBE EL CODIGO
-                        System.err.println(event.getAsciiString().substring(0, 10));
+                        monitor.disparar(getNextTransitions());
+                        setCode(event.getAsciiString().substring(0, 10));
+                       //Aqui se ejecutan las transiciones
                         event.discardData();
                    }
                    else {
@@ -108,5 +112,14 @@ public class SerialComunications  extends Device {
             serial.discardInput(); //Se borra el buffer de recepcion
         } 
         catch (IOException ex) {}
-     }
+    }
+    
+    private void setCode(String code){
+        this.code = code;
+        System.out.println(code);
+    }
+    
+    public String getCode(){
+        return code;
+    }
 }

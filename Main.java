@@ -1,4 +1,6 @@
+import ConcreteDataBase.Sqlite3;
 import ConcreteDeviceFactory.*;
+import DataBase.DataBase;
 import ServiceController.ServiceController;
 import Device.Device;
 import Factory.*;
@@ -10,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicIntegerArray;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -22,34 +27,37 @@ import com.pi4j.io.gpio.GpioFactory;
 public class Main {
     public static void main(String[] args) {
     
+ 
+      
+      
+       // Sqlite3 dataBase = new Sqlite3("/home/pi/ProyectoIntegrador/baseDeDatos/prueba.sqlite");
         
-    SIServiceController controller = new ServiceController();
-
-    controller.addService(ServiceFactory.getService("motion"));
-    
-    System.out.println(controller.stopService("motion"));
+        //dataBase.insert("insert into movement (date,snapshot) " + "values ('"+ReaderDate.read()+"','"+ReaderLastSnapshot.read()+"')");
+   
     
     try {Thread.sleep(20000);} 
     catch (InterruptedException ex) {}
-    System.out.println(controller.startService("motion"));
+    
     
     
         
-   /* 
+   
     GpioController gpio = GpioFactory.getInstance();
     ProcesadorPetri proc = new ProcesadorPetri(16,13,"/home/pi/Documents/ProyectoIntegrador/MatrizPrograma/MatrizIncidencia.txt","/home/pi/Documents/ProyectoIntegrador/MatrizPrograma/MatrizEstado.txt");
     Monitor mon = new Monitor(proc);
-    int [] trans = {2,3};
     
     ArrayList <Device> devices = new ArrayList();
     DeviceFactory factoryGPIO = new GPIODeviceFactory();
     DeviceFactory factoryCamera = new CameraDeviceFactory();
     DeviceFactory FactorySerial = new SerialDeviceFactory();
+    DataBase dataBase = DataBaseFactory.getDataBase("/home/pi/ProyectoIntegrador/baseDeDatos/prueba.sqlite","sqlite3"); 
     
-    devices.add(factoryGPIO.implementsDevice(mon, trans, "Output1", gpio, 4, "GpioOutput"));
-    devices.add(factoryGPIO.implementsDevice(mon, trans, "Listener2", gpio, 5, "GpioListener"));
-    devices.add(FactorySerial.implementsDevice(mon, trans, "RFID", "SerialComunications"));
-    //try {Thread.sleep(5000);} 
+    devices.add(factoryGPIO.implementsDevice(dataBase, mon, Arrays.asList(2,3,4,5), "Output1", gpio, 4,5 ,"GpioOutput"));
+    devices.add(factoryGPIO.implementsDevice(dataBase, mon, Arrays.asList(2,3,4,5), "Listener2", gpio, 5,0, "GpioListener"));
+    devices.add(FactorySerial.implementsDevice(dataBase, mon, Arrays.asList(2,3,4,5), "RFID", "SerialComunications"));
+   
+        /*
+        //try {Thread.sleep(5000);} 
     //catch (InterruptedException ex) {}
     
     

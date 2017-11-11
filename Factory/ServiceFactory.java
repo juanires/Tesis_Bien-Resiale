@@ -12,6 +12,4 @@ public class ServiceFactory {
     public static Service getService(String nameService){
         return new ConcreteService(nameService);
     }
-    
-    
 }
