@@ -1,5 +1,6 @@
 package Device;
 
+import ConcreteDevice.SerialComunications;
 import DataBase.DataBase;
 import Monitor.Monitor;
 import com.pi4j.io.gpio.GpioController;
@@ -21,13 +22,17 @@ public abstract class Device {
     protected int time;
     protected boolean active;
     protected DataBase dataBase;
-    protected int nexTransitions;
+    protected int nextTransitions;
+    protected Device device;
+ 
    
     
     //Metodos
     abstract protected void configure();
     abstract public void start();
-    abstract public void active(boolean option);
+    abstract protected void active(boolean option);
+    abstract public String getCode();
+    
     
     public String getName(){
         return name;
@@ -64,8 +69,13 @@ public abstract class Device {
         this.time = time;
     }
     
-    public void setActive(boolean active){
-        this.active = active;
+    public void setActive(boolean setActive){
+        active(setActive);
+        this.active = setActive;
+    }
+    
+     public void setDevice(Device device){
+        this.device = device;
     }
     
     public boolean isActive(){
@@ -75,14 +85,21 @@ public abstract class Device {
     protected int getNextTransitions(){
         
         int result;
-        if(nexTransitions < transitions.size()){
-           result = transitions.get(nexTransitions);
-           nexTransitions ++;
+        if(nextTransitions < transitions.size()){
+           result = transitions.get(nextTransitions);
+           nextTransitions ++;
         }
         else{
-            nexTransitions = 0;
-            result = transitions.get(nexTransitions);
+            nextTransitions = 0;
+            result = transitions.get(nextTransitions);
+            nextTransitions ++;
         } 
         return result;
     }
+    
+    protected void resetNextTransitions(){
+        nextTransitions = 0;
+    }
+    
+    
 }

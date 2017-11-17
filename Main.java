@@ -3,16 +3,19 @@ import ConcreteDeviceFactory.*;
 import DataBase.DataBase;
 import ServiceController.ServiceController;
 import Device.Device;
+import DeviceController.DeviceController;
 import Factory.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import Monitor.*;
+import SoftwareInterface.SIDeviceController;
 import SoftwareInterface.SIServiceController;
 import java.util.ArrayList;
 import java.util.Collection;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
@@ -26,41 +29,48 @@ import java.util.concurrent.atomic.AtomicIntegerArray;
 
 public class Main {
     public static void main(String[] args) {
-    
- 
-      
-      
-       // Sqlite3 dataBase = new Sqlite3("/home/pi/ProyectoIntegrador/baseDeDatos/prueba.sqlite");
-        
-        //dataBase.insert("insert into movement (date,snapshot) " + "values ('"+ReaderDate.read()+"','"+ReaderLastSnapshot.read()+"')");
-   
-    
-    try {Thread.sleep(20000);} 
-    catch (InterruptedException ex) {}
-    
-    
-    
-        
-   
-    GpioController gpio = GpioFactory.getInstance();
-    ProcesadorPetri proc = new ProcesadorPetri(16,13,"/home/pi/Documents/ProyectoIntegrador/MatrizPrograma/MatrizIncidencia.txt","/home/pi/Documents/ProyectoIntegrador/MatrizPrograma/MatrizEstado.txt");
+          
+    //CREACION MONITOR
+    ProcesadorPetri proc = new ProcesadorPetri(17,17,"/home/pi/ProyectoIntegrador/MatrizIncidencia3_2.txt","/home/pi/ProyectoIntegrador/MatrizEstado3_2.txt");
     Monitor mon = new Monitor(proc);
     
-    ArrayList <Device> devices = new ArrayList();
+    //CREACION DE CONTROLADORES
+    GpioController gpio = GpioFactory.getInstance();
+    SIDeviceController deviceController = new DeviceController(15);
+    
+    //CREACION DE BASE DE DATOS
+    DataBase dataBase = DataBaseFactory.getDataBase("/home/pi/ProyectoIntegrador/baseDeDatos/prueba.sqlite","sqlite3"); 
+   
+    
+    //CREACION DE FABRICAS
     DeviceFactory factoryGPIO = new GPIODeviceFactory();
     DeviceFactory factoryCamera = new CameraDeviceFactory();
-    DeviceFactory FactorySerial = new SerialDeviceFactory();
-    DataBase dataBase = DataBaseFactory.getDataBase("/home/pi/ProyectoIntegrador/baseDeDatos/prueba.sqlite","sqlite3"); 
+    DeviceFactory factorySerial = new SerialDeviceFactory();
+    DeviceFactory factoryCodeVerifier = new CodeVerifierDeviceFactory();
+    DeviceFactory factoryWebEvent = new WebEventDeviceFactory();
     
-    devices.add(factoryGPIO.implementsDevice(dataBase, mon, Arrays.asList(2,3,4,5), "Output1", gpio, 4,5 ,"GpioOutput"));
-    devices.add(factoryGPIO.implementsDevice(dataBase, mon, Arrays.asList(2,3,4,5), "Listener2", gpio, 5,0, "GpioListener"));
-    devices.add(FactorySerial.implementsDevice(dataBase, mon, Arrays.asList(2,3,4,5), "RFID", "SerialComunications"));
+    //CREACION DE DISPOSITIVOS
+    deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, mon, Arrays.asList(14,8,10), "movement", gpio, 4,0 ,"GpioListener"));
+    deviceController.addDevice(factoryCamera.implementsDevice(dataBase, mon, Arrays.asList(3,9), "Camera", 8080 ,"Camera"));
+    deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, mon, Arrays.asList(14,8,10), "button", gpio, 5,0, "GpioListener"));
+    deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, mon, Arrays.asList(2), "door", gpio, 2,3, "GpioOutput"));
+    deviceController.addDevice(factorySerial.implementsDevice(mon, Arrays.asList(0), "readerCode", "SerialComunications"));
+    deviceController.addDevice(factoryCodeVerifier.implementsDevice(dataBase, mon, Arrays.asList(4,15,8,1,7,8,16), "userCode", deviceController.getDevice("readerCode"), "CodeVerifier"));
+    deviceController.addDevice(factoryWebEvent.implementsDevice(dataBase, mon, Arrays.asList(12,5,13), "sendCode", 9001, deviceController.getDevice("readerCode"), "WebEventSendCode"));
+    deviceController.addDevice(factoryWebEvent.implementsDevice(dataBase, mon, Arrays.asList(12,5,13), "openDoor", 10000, deviceController.getDevice("readerCode"), "WebEventOpenDoor"));
+
    
-        /*
-        //try {Thread.sleep(5000);} 
-    //catch (InterruptedException ex) {}
-    
-    
+    //PRUEBA DE LA FUNCION ACTIVE   
+    try {Thread.sleep(20000);} 
+    catch (InterruptedException ex) {}
+  //  System.out.println("DESACTIVADO");
+  //  deviceController.setActiveDevice("button", false);
+    try {Thread.sleep(20000);}
+    catch (InterruptedException ex) {}
+  //  System.out.println("ACTIVADO");
+   // deviceController.setActiveDevice("button", true);
+    //-------------------------------------------------
+     /*
     while(true){
         try {Thread.sleep(5000);} 
         catch (InterruptedException ex) {}

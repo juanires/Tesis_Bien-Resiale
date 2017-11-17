@@ -66,16 +66,16 @@ public class Sqlite3 extends DataBase  {
     @Override
     public ResultSet consult(String sqlStatement){
         
-        ResultSet resultado = null;
+        ResultSet result = null;
         try {
             PreparedStatement st = connect.prepareStatement(sqlStatement);
-            resultado = st.executeQuery();
+            result = st.executeQuery();
         } 
         catch (SQLException ex) {
             System.err.println(ex.getMessage());
         }
         
-        return resultado;
+        return result;
     }
     
     
@@ -103,21 +103,20 @@ public class Sqlite3 extends DataBase  {
     * contrario retorna false.
     */
     @Override
-    public boolean usuarioRegistrado(String codigo){
+    public boolean registeredUser(String nameTable, String nameColumn, String code){
         
-        connect();
-        
-        boolean registrado = false;
-        ResultSet resultado = consult("SELECT * FROM control_datos_usuarios_dj WHERE clave_usuario='"+codigo+"'");
+        //connect();
+        boolean registered = false;
+        ResultSet resultado = consult("SELECT * FROM " + nameTable + " WHERE "+ nameColumn +"='"+code+"'");
         try {
-            registrado = resultado.next();
+            registered = resultado.next();
         } 
         catch (SQLException ex) {
             Logger.getLogger(ConcreteDataBase.Sqlite3.class.getName()).log(Level.SEVERE, null, ex);
         }
-        disconnect();
+        //disconnect();
         
-        return registrado;  
+        return registered;  
     }
     
     

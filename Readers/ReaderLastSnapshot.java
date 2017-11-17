@@ -17,7 +17,7 @@ public class ReaderLastSnapshot {
     private static final String PATH ="/home/pi/ProyectoIntegrador/motion/";
    
     public static String read(){
-        
+          
         try{
             // Se lanza el ejecutable.
             Process p;

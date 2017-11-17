@@ -38,5 +38,5 @@ public abstract class DataBase {
     * @return true si el codigo corresponde a un usuario registrado, de lo 
     * contrario retorna false.
     */
-    public abstract boolean usuarioRegistrado(String codigo);
+    public abstract boolean registeredUser(String nameTable, String nameColumn, String code);
 }

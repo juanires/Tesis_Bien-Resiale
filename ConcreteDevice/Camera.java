@@ -1,7 +1,8 @@
 package ConcreteDevice;
 import Device.Device;
-import Monitor.Monitor;
+import Readers.ReaderLastSnapshot;
 import java.io.IOException;
+
 
 /**
  *
@@ -10,6 +11,7 @@ import java.io.IOException;
 public class Camera extends Device implements Runnable {
     
     private Thread thread;
+    private String lastSnapshot;
     
     public Camera(){
         thread = null;
@@ -25,13 +27,11 @@ public class Camera extends Device implements Runnable {
             thread = new Thread(this);
             thread.start();
         }
-        active(true);
+        setActive(true);
     }
 
     @Override
-    public void active(boolean option) {
-        setActive(option);
-    }
+    protected void active(boolean option) {}
     
     private void takePicture(){
         
@@ -44,14 +44,24 @@ public class Camera extends Device implements Runnable {
         }
     }
     
+    public String getCode(){
+        return null;
+    }
+    
     @Override
     public void run() {
         
         while(true){
-            if(active){
+            if(isActive()){
                 //----------------ACCIONES QUE REALIZA EL HILO----------------------- 
-                monitor.disparar(getNextTransitions());
+                monitor.disparar(transitions.get(0));
+                lastSnapshot = ReaderLastSnapshot.read();
                 takePicture();
+                while(lastSnapshot.equals(ReaderLastSnapshot.read())){//Hasta que no se actualice el link simbolico no se dispara la proxima transicion
+                    try {Thread.sleep(1);} 
+                    catch (InterruptedException ex) {}
+                } 
+                monitor.disparar(transitions.get(1));
             }
         }
     }

@@ -3,14 +3,13 @@ package ConcreteDevice;
 import Readers.ReaderLastSnapshot;
 import Readers.ReaderDate;
 import Device.Device;
-import Monitor.Monitor;
-import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
+
 
 /**
  *
@@ -40,19 +39,21 @@ public class GpioListener extends Device {
     public void start() {
         configure();
         activeListener();
-        active(true);
+        setActive(true);
     }
 
     @Override
-    public void active(boolean option) {
+    protected void active(boolean option) {
         if (option){
             gpio.addListener(listener, myButton);
-            setActive(option);
         }
         else {
                gpio.removeListener(listener, myButton);
-               setActive(option);
         }
+    }
+    
+    public String getCode(){
+        return null;
     }
     
     private void activeListener(){
@@ -65,12 +66,12 @@ public class GpioListener extends Device {
                 if(event.getState().toString().equals("HIGH")){
                   //AQUI SE REALIZAN LOS DISPAROS DEL MONITOR
                     System.out.println( name + " HIGH");
-                    monitor.disparar(getNextTransitions());
-                    monitor.disparar(getNextTransitions());
+                    monitor.disparar(transitions.get(0));
+                    monitor.disparar(transitions.get(1));
                     //Ahora se guarda en base de datos
                     dataBase.insert("insert into " + name + " (date,snapshot) " + "values ('"+ReaderDate.read()+"','"+ReaderLastSnapshot.read()+"')");
                     //Se retornan reccursos
-                    monitor.disparar(getNextTransitions());
+                    monitor.disparar(transitions.get(2));
                 }
             }
         };

@@ -1,13 +1,9 @@
 package ConcreteDevice;
-
 import Device.Device;
-import Monitor.Monitor;
-import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  *
@@ -38,30 +34,32 @@ public class GpioOutput extends Device implements Runnable {
             thread = new Thread(this);
             thread.start();
         }
-        active(true);
+        setActive(true);
     }
 
     @Override
-    public void active(boolean option) {
-        setActive(option);
-    }
+    protected void active(boolean option) {}
 
+    
+    @Override
+    public String getCode(){
+        return null;
+    }
+    
     @Override
     public void run() {
         while(true){
-            try {Thread.sleep(10);} 
-            catch (InterruptedException ex) {}
      //----------------ACCIONES QUE REALIZA EL HILO-----------------------
-            if(active){
+            if(isActive()){
                 
-                monitor.disparar(getNextTransitions());
+                monitor.disparar(transitions.get(0));
                 pin.high();
                 
-                if(time == 0){
-                    monitor.disparar(getNextTransitions());
+                if(time == 0){ //Si no tiene tiempo asociado, debe ejecutar una transicion para apagarse
+                    monitor.disparar(transitions.get(1));
                     pin.low();
                 }
-                else{
+                else{//Si tiene tiempo asociado, despues de que éste transcurre se apaga.
                     try {Thread.sleep(time*1000);} 
                     catch (InterruptedException ex) {}
                     pin.low();

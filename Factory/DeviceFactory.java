@@ -1,4 +1,5 @@
 package Factory;
+import ConcreteDevice.SerialComunications;
 import DataBase.DataBase;
 import Device.Device;
 import Monitor.Monitor;
@@ -25,17 +26,17 @@ public abstract class DeviceFactory {
         device.setPinNumber(pinNumber);
         device.setPort(99);
         device.setTime(time);
-        device.setActive(false);
+        device.setDevice(null);
         device.start();
         
         return device;
     } 
     
     //Implements para Serial
-    public Device implementsDevice(DataBase dataBase, Monitor monitor, List<Integer> transitions, String name,String type){
+    public Device implementsDevice( Monitor monitor, List<Integer> transitions, String name,String type){
         Device device = createDevice(type);
         
-        device.setDataBase(dataBase);
+        device.setDataBase(null);
         device.setMonitor(monitor);
         device.setTransitions(transitions);
         device.setName(name);
@@ -43,7 +44,7 @@ public abstract class DeviceFactory {
         device.setPinNumber(99);
         device.setPort(99);
         device.setTime(0);
-        device.setActive(false);
+        device.setDevice(null);
         device.start();
         
         return device;
@@ -60,13 +61,48 @@ public abstract class DeviceFactory {
         device.setGpioController(null);
         device.setPinNumber(99);
         device.setPort(port);
-         device.setTime(0);
-        device.setActive(false);
+        device.setTime(0);
+        device.setDevice(null);
         device.start();
         
         return device;
     } 
     
+    //Implements para CodeVerifier
+    public Device implementsDevice(DataBase dataBase, Monitor monitor, List<Integer> transitions, String name, Device codeReader, String type){
+        Device device = createDevice(type);
+    
+        device.setDataBase(dataBase);
+        device.setMonitor(monitor);
+        device.setTransitions(transitions);
+        device.setName(name);
+        device.setGpioController(null);
+        device.setPinNumber(99);
+        device.setPort(0);
+        device.setTime(0);
+        device.setDevice(codeReader);
+        device.start();
+        
+        return device;
+    }
+    
+    //Implements para WebEvent
+    public Device implementsDevice(DataBase dataBase, Monitor monitor, List<Integer> transitions, String name,int port, Device codeReader, String type){
+        Device device = createDevice(type);
+        
+        device.setDataBase(dataBase);
+        device.setMonitor(monitor);
+        device.setTransitions(transitions);
+        device.setName(name);
+        device.setGpioController(null);
+        device.setPinNumber(99);
+        device.setPort(port);
+        device.setTime(0);
+        device.setDevice(codeReader);
+        device.start();
+        
+        return device;
+    }
   
     
 }

@@ -1,7 +1,5 @@
 package ConcreteDevice;
 import Device.Device;
-import Monitor.Monitor;
-import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.exception.UnsupportedBoardType;
 import com.pi4j.io.serial.Baud;
 import com.pi4j.io.serial.DataBits;
@@ -14,8 +12,7 @@ import com.pi4j.io.serial.SerialDataEventListener;
 import com.pi4j.io.serial.SerialFactory;
 import com.pi4j.io.serial.StopBits;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  *
@@ -60,19 +57,17 @@ public class SerialComunications  extends Device {
     public void start() {
         configure();
         activeListener();
-        active(true);
+        setActive(true);
     }
 
     @Override
-    public void active(boolean option) {
+    protected void active(boolean option) {
         if (option){
             cleanBuffer();
             serial.addListener(listener);
-            setActive(option);
         }
         else {
             serial.removeListener(listener);
-            setActive(option);
         }
     }
     
@@ -90,9 +85,8 @@ public class SerialComunications  extends Device {
                    //pero se reciben primero 8, y despues 4
                    if(n==12){ 
                     //ACCIONES A REALIZAR CUANDO SE RECIBE EL CODIGO
-                        monitor.disparar(getNextTransitions());
                         setCode(event.getAsciiString().substring(0, 10));
-                       //Aqui se ejecutan las transiciones
+                        monitor.disparar(transitions.get(0));
                         event.discardData();
                    }
                    else {
