@@ -1,11 +1,15 @@
 package ConcreteDevice;
 import Device.Device;
+import Readers.ReaderDate;
+import Readers.ReaderLastSnapshot;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,9 +34,7 @@ public class WebEventOpenDoor extends Device implements Runnable {
     }
     
     @Override
-    protected void configure() {
-        
-    }
+    protected void configure() {}
 
     @Override
     public void start() {
@@ -79,14 +81,27 @@ public class WebEventOpenDoor extends Device implements Runnable {
          
                 try {
                     socket = serverSocket.accept(); //Espera una nueva conexion
+                    socket.setSoTimeout(5000); //Se espera recibir informacion durante 5 segundos
                     dataInput = new BufferedReader(new InputStreamReader(socket.getInputStream()));//Se recibe informacion
-                    while(!dataInput.ready()); //Mietras el dato no este listo, espera
                     String data = dataInput.readLine();
                     System.out.println(data);
+                    //Se disparan recien aqui las transiciones para evitar inconvenientes en caso de TimeOut
+                    monitor.disparar(transitions.get(0));
+                    monitor.disparar(transitions.get(1));//Se guarda en base de datos
+                    dataBase.insert("insert into " + name + " values ('"+ReaderDate.read()+"',"+Integer.parseInt(data)+",'"+ReaderLastSnapshot.read()+"')");
+                    monitor.disparar(transitions.get(2));
+                } 
+                catch (SocketTimeoutException ex) { //En caso que haya expirado el TimeOut tengo que 
+                    System.out.println("El tiempo a expirado");
+                }
+                catch (IOException ex) {
+                    System.out.println("Error en Socket");
+                }
+                try {
                     socket.close();
                 } 
                 catch (IOException ex) {
-                    Logger.getLogger(WebEventOpenDoor.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println("Error al cerrar Socket");
                 }
             }
         }

@@ -37,6 +37,7 @@ public class Main {
     //CREACION DE CONTROLADORES
     GpioController gpio = GpioFactory.getInstance();
     SIDeviceController deviceController = new DeviceController(15);
+    SIServiceController serviceController = new ServiceController();
     
     //CREACION DE BASE DE DATOS
     DataBase dataBase = DataBaseFactory.getDataBase("/home/pi/ProyectoIntegrador/baseDeDatos/prueba.sqlite","sqlite3"); 
@@ -48,7 +49,7 @@ public class Main {
     DeviceFactory factorySerial = new SerialDeviceFactory();
     DeviceFactory factoryCodeVerifier = new CodeVerifierDeviceFactory();
     DeviceFactory factoryWebEvent = new WebEventDeviceFactory();
-    
+        
     //CREACION DE DISPOSITIVOS
     deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, mon, Arrays.asList(14,8,10), "movement", gpio, 4,0 ,"GpioListener"));
     deviceController.addDevice(factoryCamera.implementsDevice(dataBase, mon, Arrays.asList(3,9), "Camera", 8080 ,"Camera"));
@@ -56,10 +57,13 @@ public class Main {
     deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, mon, Arrays.asList(2), "door", gpio, 2,3, "GpioOutput"));
     deviceController.addDevice(factorySerial.implementsDevice(mon, Arrays.asList(0), "readerCode", "SerialComunications"));
     deviceController.addDevice(factoryCodeVerifier.implementsDevice(dataBase, mon, Arrays.asList(4,15,8,1,7,8,16), "userCode", deviceController.getDevice("readerCode"), "CodeVerifier"));
-    deviceController.addDevice(factoryWebEvent.implementsDevice(dataBase, mon, Arrays.asList(12,5,13), "sendCode", 9001, deviceController.getDevice("readerCode"), "WebEventSendCode"));
-    deviceController.addDevice(factoryWebEvent.implementsDevice(dataBase, mon, Arrays.asList(12,5,13), "openDoor", 10000, deviceController.getDevice("readerCode"), "WebEventOpenDoor"));
+    deviceController.addDevice(factoryWebEvent.implementsDevice(dataBase, mon, Arrays.asList(12,5,13), "sendCode", 9000, deviceController.getDevice("readerCode"), "WebEventSendCode"));
+    deviceController.addDevice(factoryWebEvent.implementsDevice(dataBase, mon, Arrays.asList(11,8,6), "WebEventOpenDoor", 9001, deviceController.getDevice("readerCode"), "WebEventOpenDoor"));
 
+   //CREACION DE LOS SERVICIOS
    
+    
+    
     //PRUEBA DE LA FUNCION ACTIVE   
     try {Thread.sleep(20000);} 
     catch (InterruptedException ex) {}
