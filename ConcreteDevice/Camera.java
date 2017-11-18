@@ -48,6 +48,10 @@ public class Camera extends Device implements Runnable {
         return null;
     }
     
+    public int getPinState(){
+        return 0;
+    }
+    
     @Override
     public void run() {
         

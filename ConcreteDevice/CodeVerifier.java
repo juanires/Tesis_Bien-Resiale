@@ -60,4 +60,8 @@ public class CodeVerifier extends Device implements Runnable{
         return null;
     }
     
+    public int getPinState(){
+        return 0;
+    }
+    
 }

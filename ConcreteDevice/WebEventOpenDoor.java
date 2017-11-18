@@ -6,6 +6,8 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -51,8 +53,7 @@ public class WebEventOpenDoor extends Device implements Runnable {
     protected void active(boolean option) {
         if(option){
             try { 
-                serverSocket = new ServerSocket(port);
-                //FALTA BINDEAR
+                serverSocket = new ServerSocket(port,1,InetAddress.getLocalHost());
             } 
             catch (IOException ex) {
                 Logger.getLogger(WebEventOpenDoor.class.getName()).log(Level.SEVERE, null, ex);
@@ -72,6 +73,10 @@ public class WebEventOpenDoor extends Device implements Runnable {
     public String getCode() {
         return null;
     }
+    
+    public int getPinState(){
+        return 0;
+    }
 
     @Override
     public void run() {
@@ -81,7 +86,7 @@ public class WebEventOpenDoor extends Device implements Runnable {
          
                 try {
                     socket = serverSocket.accept(); //Espera una nueva conexion
-                    socket.setSoTimeout(5000); //Se espera recibir informacion durante 5 segundos
+                    socket.setSoTimeout(10000); //Se espera recibir informacion durante 5 segundos
                     dataInput = new BufferedReader(new InputStreamReader(socket.getInputStream()));//Se recibe informacion
                     String data = dataInput.readLine();
                     System.out.println(data);

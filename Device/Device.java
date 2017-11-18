@@ -32,6 +32,7 @@ public abstract class Device {
     abstract public void start();
     abstract protected void active(boolean option);
     abstract public String getCode();
+    abstract public int getPinState();
     
     
     public String getName(){

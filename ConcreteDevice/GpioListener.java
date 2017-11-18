@@ -80,4 +80,8 @@ public class GpioListener extends Device {
     public int getPinNumber(){
         return pinNumber;
     }
+    
+    public int getPinState(){
+        return 0;
+    }
 }

@@ -116,4 +116,8 @@ public class SerialComunications  extends Device {
     public String getCode(){
         return code;
     }
+    
+     public int getPinState(){
+        return 0;
+    }
 }

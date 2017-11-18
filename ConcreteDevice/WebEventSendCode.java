@@ -5,6 +5,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -50,8 +51,7 @@ public class WebEventSendCode extends Device implements Runnable{
     protected void active(boolean option) {
         if(option){
             try { 
-                serverSocket = new ServerSocket(port);
-                //FALTA BINDEAR
+                serverSocket = new ServerSocket(port,1,InetAddress.getLocalHost());//127.0.1.1
             } 
             catch (IOException ex) {
                 Logger.getLogger(WebEventOpenDoor.class.getName()).log(Level.SEVERE, null, ex);
@@ -70,6 +70,10 @@ public class WebEventSendCode extends Device implements Runnable{
     @Override
     public String getCode() {
         return null;
+    }
+    
+     public int getPinState(){
+        return 0;
     }
 
     @Override

@@ -46,6 +46,12 @@ public class GpioOutput extends Device implements Runnable {
         return null;
     }
     
+     public int getPinState(){
+        if(pin.isHigh())
+            return 1;
+        return 0;
+    }
+    
     @Override
     public void run() {
         while(true){
