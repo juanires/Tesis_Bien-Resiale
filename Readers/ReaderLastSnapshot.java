@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  */
 public class ReaderLastSnapshot {
        
-    private static final String PATH ="/home/pi/ProyectoIntegrador/motion/";
+    private static final String PATH ="/home/pi/ProyectoIntegrador/DjangoProjects/tesis/events/static/events/";
    
     public static String read(){
           

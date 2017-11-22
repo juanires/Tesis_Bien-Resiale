@@ -69,7 +69,7 @@ public class GpioListener extends Device {
                     monitor.disparar(transitions.get(0));
                     monitor.disparar(transitions.get(1));
                     //Ahora se guarda en base de datos
-                    dataBase.insert("insert into " + name + " (date,snapshot) " + "values ('"+ReaderDate.read()+"','"+ReaderLastSnapshot.read()+"')");
+                    dataBase.insert("insert into events_" + name + " (date_time,image) values ('"+ReaderDate.read()+"','"+ReaderLastSnapshot.read()+"')");
                     //Se retornan reccursos
                     monitor.disparar(transitions.get(2));
                 }

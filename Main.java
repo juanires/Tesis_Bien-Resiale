@@ -1,32 +1,28 @@
-import ConcreteDataBase.Sqlite3;
 import ConcreteDeviceFactory.*;
 import DataBase.DataBase;
 import ServiceController.ServiceController;
-import Device.Device;
 import DeviceController.DeviceController;
 import Factory.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import Monitor.*;
 import SoftwareInterface.SIDeviceController;
 import SoftwareInterface.SIServiceController;
-import java.util.ArrayList;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import java.time.LocalTime;
 import java.util.Arrays;
 
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 
 
 public class Main {
+    
     public static void main(String[] args) {
     
+        //VARIABLES
+        LocalTime DETECTION_TIME_INIT_MOTION_SENSOR = LocalTime.of(20,00); // El inicio de deteccion es a las 21 hs
+        LocalTime DETECTION_TIME_FINALIZE_MOTION_SENSOR = LocalTime.of(7,45); // La finalizacion de deteccion es a las 7.45 hs
+        
+        
         //CREACION MONITOR
         ProcesadorPetri proc = new ProcesadorPetri(26,28,"/home/pi/ProyectoIntegrador/MatrizIncidencia4.txt","/home/pi/ProyectoIntegrador/MatrizEstado4.txt");
         Monitor monitor = new Monitor(proc);
@@ -37,7 +33,7 @@ public class Main {
         SIServiceController serviceController = new ServiceController();
 
         //CREACION DE BASE DE DATOS
-        DataBase dataBase = DataBaseFactory.getDataBase("/home/pi/ProyectoIntegrador/baseDeDatos/prueba.sqlite","sqlite3"); 
+        DataBase dataBase = DataBaseFactory.getDataBase("/home/pi/ProyectoIntegrador/DjangoProjects/tesis/db.sqlite3","sqlite3"); 
 
 
         //CREACION DE FABRICAS
@@ -60,25 +56,51 @@ public class Main {
         deviceController.addDevice(factorySerial.implementsDevice(monitor, Arrays.asList(0), "readerCode", "SerialComunications"));
         deviceController.addDevice(factoryCodeVerifier.implementsDevice(dataBase, monitor, Arrays.asList(6,24,14,1,13,14,25), "userCode", deviceController.getDevice("readerCode"), "CodeVerifier"));
         deviceController.addDevice(factoryWebEvent.implementsDevice(dataBase, monitor, Arrays.asList(21,11,22), "sendCode", 9000, deviceController.getDevice("readerCode"), "WebEventSendCode"));
-        deviceController.addDevice(factoryWebEvent.implementsDevice(dataBase, monitor, Arrays.asList(20,14,12), "WebEventOpenDoor", 9001, deviceController.getDevice("readerCode"), "WebEventOpenDoor"));
+        deviceController.addDevice(factoryWebEvent.implementsDevice(dataBase, monitor, Arrays.asList(20,14,12), "WebOpenDoor", 9001, deviceController.getDevice("readerCode"), "WebEventOpenDoor"));
 
        monitor.disparar(18);//SE INICIA EL PROGRAMA
        monitor.disparar(17);//Se habilita el led Verde
 
 
         while(true){
-
-            if (serviceController.stateAllServices()==1){//Si no hay problemas con servicios y el led esta encendido
-               if(deviceController.getDevice("YellowLed").getPinState()==1)
-                    monitor.disparar(7); //Se deshabilita el led Amarillo
-            }
-            else{
-                if(deviceController.getDevice("YellowLed").getPinState()==0)//Si hay problemas con servicios y el led esta apagado
-                    monitor.disparar(16);//Se habilita el led Amarillo
-                    serviceController.restartDroppedService(); //Se reinician los servicios caidos
-            }
-            try {Thread.sleep(20000);} 
+            
+            //COMPROBACION DEL FUNCIONAMIENTO DE SERVICIOS
+            verifyServices(monitor,serviceController,deviceController);
+            
+            //COMPROBACION DEL HORARIO EN QUE SE DETECTA MOVIMIENTO
+            verifyTimeMotionSensor(deviceController, DETECTION_TIME_INIT_MOTION_SENSOR, DETECTION_TIME_FINALIZE_MOTION_SENSOR);
+            
+            try {Thread.sleep(2000);} 
             catch (InterruptedException ex) {}
+        }
+    }
+    
+    static public void verifyServices(Monitor monitor, SIServiceController serviceController,SIDeviceController deviceController){
+        //COMPROBACION DEL FUNCIONAMIENTO DE SERVICIOS
+        if (serviceController.stateAllServices()==1){//Si no hay problemas con servicios y el led esta encendido
+           if(deviceController.getDevice("YellowLed").getPinState()==1){
+                monitor.disparar(7); //Se deshabilita el led Amarillo
+           }
+        }
+        else{
+            if(deviceController.getDevice("YellowLed").getPinState()==0){//Si hay problemas con servicios y el led esta apagado
+                monitor.disparar(16);//Se habilita el led Amarillo
+                serviceController.restartDroppedService(); //Se reinician los servicios caidos
+            }
+        }
+    }
+     
+    static public void verifyTimeMotionSensor(SIDeviceController deviceController,LocalTime detectionTimeInit,LocalTime detectionTimeFinalize){
+       //Se obtiene la hora actual y se verificaa si esta en el rango horario de deteccion
+        if(LocalTime.now().isAfter(detectionTimeInit) || LocalTime.now().isBefore(detectionTimeFinalize)){
+            if(!deviceController.getDevice("movement").isActive()){ //Si el dispositivo no esta activo
+                deviceController.getDevice("movement").setActive(true); //Se activa
+            }
+        }
+        else{ //Si no se esta en el rango de deteccion
+            if(deviceController.getDevice("movement").isActive()){  //Si esta activado
+                deviceController.getDevice("movement").setActive(false); //Se desactiva
+            }
         }
     }
 }

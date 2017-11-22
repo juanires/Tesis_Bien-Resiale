@@ -25,7 +25,7 @@ public class Sqlite3 extends DataBase  {
     */
     public Sqlite3(String url){
         this.url= url;
-        connect();
+       // connect();
     }
     
     /**
@@ -65,7 +65,7 @@ public class Sqlite3 extends DataBase  {
     */
     @Override
     public ResultSet consult(String sqlStatement){
-        
+      
         ResultSet result = null;
         try {
             PreparedStatement st = connect.prepareStatement(sqlStatement);
@@ -80,14 +80,17 @@ public class Sqlite3 extends DataBase  {
     
     
     public int insert(String sqlStatement){
+      connect();
         try {
             PreparedStatement st = connect.prepareStatement(sqlStatement);
             st.execute();
         } 
         catch (SQLException ex) {
             System.err.println(ex.getMessage());
+            disconnect();
             return 0;
         }
+        disconnect();
         return 1;
     }
     
@@ -103,21 +106,25 @@ public class Sqlite3 extends DataBase  {
     * contrario retorna false.
     */
     @Override
-    public boolean registeredUser(String nameTable, String nameColumn, String code){
-        
-        //connect();
-        boolean registered = false;
-        ResultSet resultado = consult("SELECT * FROM " + nameTable + " WHERE "+ nameColumn +"='"+code+"'");
+    public int registeredUser(String nameTable, String nameColumnCode, String code, String nameColumnToCompare){
+         
+        int user = -1;
+        connect();
+        ResultSet result = consult("SELECT * FROM " + nameTable + " WHERE "+ nameColumnCode +"='"+code+"'");
+               
         try {
-            registered = resultado.next();
+            while (result.next()) { //De los resultados obtenidos se consulta si alguno esta activo
+                if(result.getBoolean(nameColumnToCompare)){
+                    user = result.getInt("id");
+                }
+            }
+            disconnect();
+            return user; //En caaso de que no haya  usuario con el codigo especificado y que ademas esté activo
         } 
         catch (SQLException ex) {
             Logger.getLogger(ConcreteDataBase.Sqlite3.class.getName()).log(Level.SEVERE, null, ex);
+            disconnect();
+            return -1;
         }
-        //disconnect();
-        
-        return registered;  
     }
-    
-    
 }

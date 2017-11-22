@@ -5,6 +5,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -19,7 +20,8 @@ public class WebEventSendCode extends Device implements Runnable{
 
     private Thread thread;
     private BufferedReader dataInput;
-    private DataOutputStream dataOutput;
+    PrintWriter dataOutput;
+//private DataOutputStream dataOutput;
     private Socket socket;
     private ServerSocket serverSocket;
      
@@ -83,32 +85,21 @@ public class WebEventSendCode extends Device implements Runnable{
         //----------------ACCIONES QUE REALIZA EL HILO-----------------------
             if(isActive()){
                 try {
-                   socket = serverSocket.accept(); //Espera una nueva conexion
-                   //dataInput = new BufferedReader(new InputStreamReader(socket.getInputStream()));//Se recibe informacion
-                   //String g = dataInput.readLine();
-                   //while (g!= "fin/n"){
-                    
-                     //  g = dataInput.readLine();
-                     //  System.out.println(g);
-                   //}
-                  // System.out.println(dataInput.readLine());
-                    //if(dataInput.readLine().equals("sendCode")){
-                       monitor.disparar(transitions.get(0));
-                       monitor.disparar(transitions.get(1));
-                       dataOutput = new DataOutputStream(socket.getOutputStream());
-                      // String g = device.getCode();
-                       dataOutput.writeUTF(device.getCode());
-                       monitor.disparar(transitions.get(2));
-                    //}
+                    socket = serverSocket.accept(); //Espera una nueva conexion
+                    monitor.disparar(transitions.get(0));
+                    monitor.disparar(transitions.get(1));
+                    dataOutput = new PrintWriter(socket.getOutputStream());
+                    dataOutput.print(device.getCode());
+                    dataOutput.flush();
+                    dataOutput.close();
                     socket.close();
+                    monitor.disparar(transitions.get(2));                    
                 } 
                 catch (IOException ex) {
                     Logger.getLogger(WebEventSendCode.class.getName()).log(Level.SEVERE, null, ex);
+                    monitor.disparar(transitions.get(2));
                 }
             }
         }
-        
-        
     }
-    
 }

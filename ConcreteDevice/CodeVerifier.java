@@ -10,9 +10,11 @@ import Readers.ReaderLastSnapshot;
 public class CodeVerifier extends Device implements Runnable{
 
     private Thread thread;
+    private int userId;
     
     public CodeVerifier(){
         thread = null;
+        userId = -1;
     }
     
     @Override
@@ -38,17 +40,20 @@ public class CodeVerifier extends Device implements Runnable{
             if(isActive()){
                 //----------------ACCIONES QUE REALIZA EL HILO----------------------- 
                 monitor.disparar(transitions.get(0));
-                //Si el codigo pertenece a un usuario de la base de datos
-                if(dataBase.registeredUser("userCode", "code", device.getCode())){
+                //Si el codigo pertenece a un usuario de la base de datos y que ademas esté activo
+                userId = dataBase.registeredUser("users_user", "code", device.getCode(),"is_active");
+                if(userId > 0){
                     monitor.disparar(transitions.get(1));
                     monitor.disparar(transitions.get(2));
-                    dataBase.insert("insert into permitted " + "values ('"+ReaderDate.read()+"','"+ReaderLastSnapshot.read()+"')");
+                    dataBase.insert("insert into events_permittedaccess (date_time,user_id,image) " + "values ('"+ReaderDate.read()+"',"+ userId +",'"+ReaderLastSnapshot.read()+"')");
+                    userId = -1;
                     monitor.disparar(transitions.get(3)); //Se retornan los recursos
                 }
                 else{
+                    userId = -1;
                     monitor.disparar(transitions.get(4));
                     monitor.disparar(transitions.get(5));
-                    dataBase.insert("insert into denied " + "values ('"+ReaderDate.read()+"','"+ReaderLastSnapshot.read()+"')");
+                    dataBase.insert("insert into events_deniedaccess " + " (date_time,image)values ('"+ReaderDate.read()+"','"+ReaderLastSnapshot.read()+"')");
                     monitor.disparar(transitions.get(6));
                 }
             }
