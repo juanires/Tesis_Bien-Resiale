@@ -1,6 +1,5 @@
 package ConcreteDeviceFactory;
-import ConcreteDevice.GpioListener;
-import ConcreteDevice.GpioOutput;
+import ConcreteDevice.*;
 import Device.Device;
 import Factory.DeviceFactory;
 
@@ -14,11 +13,20 @@ public class GPIODeviceFactory extends DeviceFactory {
     @Override
     protected Device createDevice(String type) {
    
-        if(type.equalsIgnoreCase("GpioOutput")){
-            return new GpioOutput();
+        if(type.equalsIgnoreCase("GpioListenerMovement")){
+            return new GpioListenerMovement();
         }
-        if(type.equalsIgnoreCase("GpioListener")){
-            return new GpioListener();
+        if(type.equalsIgnoreCase("GpioListenerButton")){
+            return new GpioListenerButton();
+        }
+        if(type.equalsIgnoreCase("GpioOutputBell")){
+            return new GpioOutputBell();
+        }
+        if(type.equalsIgnoreCase("GpioOutputLed")){
+            return new GpioOutputLed();
+        }
+        if(type.equalsIgnoreCase("GpioOutputLock")){
+            return new GpioOutputLock();
         }
         return null;
     }

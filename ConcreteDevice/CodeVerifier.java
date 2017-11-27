@@ -40,8 +40,8 @@ public class CodeVerifier extends Device implements Runnable{
             if(isActive()){
                 //----------------ACCIONES QUE REALIZA EL HILO----------------------- 
                 monitor.disparar(transitions.get(0));
-                //Si el codigo pertenece a un usuario de la base de datos y que ademas esté activo
-                userId = dataBase.registeredUser("users_user", "code", device.getCode(),"is_active");
+                //Se verifica el codigo pertenece a un usuario de la base de datos y que ademas esté activo
+                userId = dataBase.registeredUser(device.getCode());
                 if(userId > 0){
                     monitor.disparar(transitions.get(1));
                     monitor.disparar(transitions.get(2));

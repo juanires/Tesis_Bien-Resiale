@@ -18,13 +18,16 @@ public class Main {
     
     public static void main(String[] args) {
     
+        
+        
+        
         //VARIABLES
-        LocalTime DETECTION_TIME_INIT_MOTION_SENSOR = LocalTime.of(20,00); // El inicio de deteccion es a las 21 hs
+        LocalTime DETECTION_TIME_INIT_MOTION_SENSOR = LocalTime.of(20,00); // El inicio de deteccion es a las 20 hs
         LocalTime DETECTION_TIME_FINALIZE_MOTION_SENSOR = LocalTime.of(7,45); // La finalizacion de deteccion es a las 7.45 hs
         
         
         //CREACION MONITOR
-        ProcesadorPetri proc = new ProcesadorPetri(26,28,"/home/pi/ProyectoIntegrador/MatrizIncidencia4.txt","/home/pi/ProyectoIntegrador/MatrizEstado4.txt");
+        ProcesadorPetri proc = new ProcesadorPetri(29,30,"/home/pi/ProyectoIntegrador/MatrizIncidencia5.txt","/home/pi/ProyectoIntegrador/MatrizEstado5.txt");
         Monitor monitor = new Monitor(proc);
 
         //CREACION DE CONTROLADORES
@@ -45,21 +48,24 @@ public class Main {
 
          //CREACION DE LOS SERVICIOS
         serviceController.addService(ServiceFactory.getService("motion"));
-        
+                
         //CREACION DE DISPOSITIVOS
-        deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, monitor, Arrays.asList(23,14,19), "movement", gpio, 4,0 ,"GpioListener"));
-        deviceController.addDevice(factoryCamera.implementsDevice(dataBase, monitor, Arrays.asList(5,15), "Camera", 8080 ,"Camera"));
-        deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, monitor, Arrays.asList(23,14,19), "button", gpio, 5,0, "GpioListener"));
-        deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, monitor, Arrays.asList(2), "door", gpio, 2,3, "GpioOutput"));
-        deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, monitor, Arrays.asList(10,4), "GreeLed", gpio, 12,0, "GpioOutput"));
-        deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, monitor, Arrays.asList(9,3), "YellowLed", gpio, 13,0, "GpioOutput"));
+        deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, monitor, Arrays.asList(26,15,21), "movement", gpio, 4,0 ,"GpioListenerMovement"));
+        deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, monitor, Arrays.asList(26,15,18,25), "button", gpio, 5,0, "GpioListenerButton"));
+        deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, monitor, Arrays.asList(9), "bell", gpio, 3,3, "GpioOutputBell"));
+        deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, monitor, Arrays.asList(2), "door", gpio, 2,3, "GpioOutputLock"));
+        deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, monitor, Arrays.asList(11,4), "GreeLed", gpio, 12,0, "GpioOutputLed"));
+        deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, monitor, Arrays.asList(10,3), "YellowLed", gpio, 13,0, "GpioOutputLed"));
+        deviceController.addDevice(factoryCamera.implementsDevice(dataBase, monitor, Arrays.asList(5,16), "Camera", 8080 ,"Camera"));
         deviceController.addDevice(factorySerial.implementsDevice(monitor, Arrays.asList(0), "readerCode", "SerialComunications"));
-        deviceController.addDevice(factoryCodeVerifier.implementsDevice(dataBase, monitor, Arrays.asList(6,24,14,1,13,14,25), "userCode", deviceController.getDevice("readerCode"), "CodeVerifier"));
-        deviceController.addDevice(factoryWebEvent.implementsDevice(dataBase, monitor, Arrays.asList(21,11,22), "sendCode", 9000, deviceController.getDevice("readerCode"), "WebEventSendCode"));
-        deviceController.addDevice(factoryWebEvent.implementsDevice(dataBase, monitor, Arrays.asList(20,14,12), "WebOpenDoor", 9001, deviceController.getDevice("readerCode"), "WebEventOpenDoor"));
+        deviceController.addDevice(factoryCodeVerifier.implementsDevice(dataBase, monitor, Arrays.asList(6,27,15,1,14,15,28), "userCode", deviceController.getDevice("readerCode"), "CodeVerifier"));
+        deviceController.addDevice(factoryWebEvent.implementsDevice(dataBase, monitor, Arrays.asList(23,12,24), "sendCode", 9000, deviceController.getDevice("readerCode"), "WebEventSendCode"));
+        deviceController.addDevice(factoryWebEvent.implementsDevice(dataBase, monitor, Arrays.asList(22,15,13), "WebOpenDoor", 9001, deviceController.getDevice("readerCode"), "WebEventOpenDoor"));
 
-       monitor.disparar(18);//SE INICIA EL PROGRAMA
-       monitor.disparar(17);//Se habilita el led Verde
+        
+
+       monitor.disparar(20);//SE INICIA EL PROGRAMA
+       monitor.disparar(19);//Se habilita el led Verde
 
 
         while(true){
@@ -84,7 +90,7 @@ public class Main {
         }
         else{
             if(deviceController.getDevice("YellowLed").getPinState()==0){//Si hay problemas con servicios y el led esta apagado
-                monitor.disparar(16);//Se habilita el led Amarillo
+                monitor.disparar(17);//Se habilita el led Amarillo
                 serviceController.restartDroppedService(); //Se reinician los servicios caidos
             }
         }

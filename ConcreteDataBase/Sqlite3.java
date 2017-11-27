@@ -6,6 +6,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -66,6 +69,7 @@ public class Sqlite3 extends DataBase  {
     @Override
     public ResultSet consult(String sqlStatement){
       
+       //connect();
         ResultSet result = null;
         try {
             PreparedStatement st = connect.prepareStatement(sqlStatement);
@@ -73,8 +77,10 @@ public class Sqlite3 extends DataBase  {
         } 
         catch (SQLException ex) {
             System.err.println(ex.getMessage());
+     //       disconnect();
         }
         
+     //   disconnect();
         return result;
     }
     
@@ -106,25 +112,37 @@ public class Sqlite3 extends DataBase  {
     * contrario retorna false.
     */
     @Override
-    public int registeredUser(String nameTable, String nameColumnCode, String code, String nameColumnToCompare){
-         
-        int user = -1;
+    public int registeredUser(String code){
+       
+        int userId = -1;
+        String dayOfWeek = LocalDate.now().getDayOfWeek().toString().toLowerCase().concat("_id");; //Se obtiene el nombre del dia de la semana 
+       //Como en la tabla estos campos son claves foraneas y por esto Django le agrega "_id", tambien se lo agrega para que coincida con el nombre del campo
+        
         connect();
-        ResultSet result = consult("SELECT * FROM " + nameTable + " WHERE "+ nameColumnCode +"='"+code+"'");
-               
-        try {
-            while (result.next()) { //De los resultados obtenidos se consulta si alguno esta activo
-                if(result.getBoolean(nameColumnToCompare)){
-                    user = result.getInt("id");
+        ResultSet result = consult("SELECT user.id, is_staff, begin, end FROM users_user as user, users_timezone as time WHERE user.code='"+code+"' and user.is_active = 1 and "+dayOfWeek+"= time.id");
+        //ResultSet result = consult("SELECT user.id, is_staff, begin, end FROM users_user as user, users_timezone as time WHERE user.id=3 and user.is_active = 1 and "+dayOfWeek+"= time.id");
+        if(result!=null){
+            try {
+                result.next();
+                if(result.getBoolean("is_staff")){ //Si es administrador
+                    userId = result.getInt("id"); //No se verifica la franja horaria
                 }
+                else{ //Si NO es administrador
+                    LocalTime begin = LocalTime.parse(result.getString("begin"), DateTimeFormatter.ISO_LOCAL_TIME);
+                    LocalTime end = LocalTime.parse(result.getString("end"), DateTimeFormatter.ISO_LOCAL_TIME);
+                    if(LocalTime.now().isAfter(begin) && LocalTime.now().isBefore(end)){
+                       userId = result.getInt("id");
+                    }
+                }
+                /*while (result.next()) { //De los resultados obtenidos se consulta si alguno esta activo
+                }*/
+            } 
+            catch (SQLException ex) {
+                //Logger.getLogger(ConcreteDataBase.Sqlite3.class.getName()).log(Level.SEVERE, null, ex);
+                userId = -1;
             }
-            disconnect();
-            return user; //En caaso de que no haya  usuario con el codigo especificado y que ademas esté activo
-        } 
-        catch (SQLException ex) {
-            Logger.getLogger(ConcreteDataBase.Sqlite3.class.getName()).log(Level.SEVERE, null, ex);
-            disconnect();
-            return -1;
         }
+        disconnect();
+        return userId;
     }
 }
