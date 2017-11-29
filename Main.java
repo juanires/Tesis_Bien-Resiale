@@ -6,6 +6,7 @@ import Factory.*;
 import Monitor.*;
 import SoftwareInterface.SIDeviceController;
 import SoftwareInterface.SIServiceController;
+import Updaters.DataBaseUpdater;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import java.time.LocalTime;
@@ -38,7 +39,10 @@ public class Main {
         //CREACION DE BASE DE DATOS
         DataBase dataBase = DataBaseFactory.getDataBase("/home/pi/ProyectoIntegrador/DjangoProjects/tesis/db.sqlite3","sqlite3"); 
 
-
+        DataBaseUpdater data = new DataBaseUpdater(dataBase);
+        data.deleteEvents();
+      
+/*
         //CREACION DE FABRICAS
         DeviceFactory factoryGPIO = new GPIODeviceFactory();
         DeviceFactory factoryCamera = new CameraDeviceFactory();
@@ -107,6 +111,6 @@ public class Main {
             if(deviceController.getDevice("movement").isActive()){  //Si esta activado
                 deviceController.getDevice("movement").setActive(false); //Se desactiva
             }
-        }
+        }*/
     }
 }

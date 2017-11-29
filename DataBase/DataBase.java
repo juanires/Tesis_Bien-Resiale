@@ -1,6 +1,10 @@
 package DataBase;
 
 import java.sql.ResultSet;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -24,9 +28,13 @@ public abstract class DataBase {
     * @param consulta Consulta sql a ejecutar.
     * @return ResultSet. Retorna el resultado de la consulta.
     */
-    public abstract ResultSet consult(String sqlStatement);
+    protected abstract ResultSet consult(String sqlStatement);
     
     public abstract int insert(String sqlStatement);
+    
+    public abstract int update(String sqlStatement);
+    
+    protected abstract int delete(String sqlStatement);
     
     /**
     * Comprobar si es un ususario registrado. Se comprueba si el código
@@ -39,4 +47,8 @@ public abstract class DataBase {
     * contrario retorna false.
     */
     public abstract int registeredUser(String code);
+
+    public abstract ArrayList deleteEvents(LocalDateTime date, ArrayList tablesOfEvents);
+    
+    public abstract ArrayList tablesList();
 }

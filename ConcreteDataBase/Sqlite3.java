@@ -7,8 +7,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -67,9 +70,8 @@ public class Sqlite3 extends DataBase  {
     * @return ResultSet. Retorna el resultado de la consulta.
     */
     @Override
-    public ResultSet consult(String sqlStatement){
+    protected ResultSet consult(String sqlStatement){
       
-       //connect();
         ResultSet result = null;
         try {
             PreparedStatement st = connect.prepareStatement(sqlStatement);
@@ -77,10 +79,7 @@ public class Sqlite3 extends DataBase  {
         } 
         catch (SQLException ex) {
             System.err.println(ex.getMessage());
-     //       disconnect();
         }
-        
-     //   disconnect();
         return result;
     }
     
@@ -97,6 +96,35 @@ public class Sqlite3 extends DataBase  {
             return 0;
         }
         disconnect();
+        return 1;
+    }
+    
+    public int update(String sqlStatement){
+        
+        connect();
+        try {
+            PreparedStatement st = connect.prepareStatement(sqlStatement);
+            st.execute();
+        } 
+        catch (SQLException ex) {
+            System.err.println(ex.getMessage());
+            disconnect();
+            return 0;
+        }
+        disconnect();
+        return 1;
+    }
+    
+    protected int delete(String sqlStatement){
+        try {
+            PreparedStatement st = connect.prepareStatement(sqlStatement);
+            st.execute();
+        } 
+        catch (SQLException ex) {
+            System.err.println(ex.getMessage());
+            disconnect();
+            return 0;
+        }
         return 1;
     }
     
@@ -145,4 +173,49 @@ public class Sqlite3 extends DataBase  {
         disconnect();
         return userId;
     }
+    
+    @Override
+    public ArrayList deleteEvents(LocalDateTime date, ArrayList tablesOfEvents){
+        ArrayList <String> imagesOfEventsToBeDeleted = new ArrayList();
+        String limitDate = date.toLocalDate().toString().concat(" "+date.toLocalTime().toString());
+        int count = 0;
+        connect();
+       
+        while(count < tablesOfEvents.size()){//Se consultan todas las tablas de eventos
+            ResultSet result = consult("SELECT id,image FROM "+tablesOfEvents.get(count) +" WHERE date_time <'"+limitDate+"'" );
+            if(result!=null){
+                try {
+                    while(result.next()) { //Mietras hayan filas a eliminar
+                        imagesOfEventsToBeDeleted.add(result.getString("image"));
+                        delete("DELETE FROM "+tablesOfEvents.get(count)+" WHERE id = "+result.getInt("id"));
+                    }
+                } 
+                catch (SQLException ex) {
+                    //Logger.getLogger(Sqlite3.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            count ++;
+        }
+        disconnect();
+        return imagesOfEventsToBeDeleted;
+    }
+    
+    public ArrayList tablesList(){
+        ArrayList<String> tables = new ArrayList();
+        connect();
+        ResultSet result = consult("SELECT name FROM sqlite_master WHERE type='table'" );
+        if(result!=null){
+            try {
+                while(result.next()) { //Mietras hayan filas a eliminar
+                   tables.add(result.getString("name"));
+                }
+            } 
+            catch (SQLException ex) {
+                Logger.getLogger(Sqlite3.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        disconnect();
+        return tables;
+    }
+    
 }
