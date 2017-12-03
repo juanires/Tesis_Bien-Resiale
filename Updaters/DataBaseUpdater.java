@@ -1,17 +1,16 @@
 package Updaters;
-
 import DataBase.DataBase;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.ArrayList;
 
 /**
  *
  * @author Compuj
  */
-public class DataBaseUpdater {
+public class DataBaseUpdater implements Runnable {
     
+    private Thread thread;
     DataBase database;
     ArrayList<String> tablesOfEvents;
     LocalDateTime limitTime ;
@@ -20,12 +19,25 @@ public class DataBaseUpdater {
     int daysLimit;
     
     public DataBaseUpdater(DataBase database){
+        thread = new Thread(this);
         this.database = database;
         tablesOfEvents = new ArrayList();
         setTimeLapseOfDeleteEvents(2,0,0);
         loadTableName();
+        thread.start();
     }
     
+    @Override
+    public void run() {
+        while(true){
+            
+            try {Thread.sleep(86400000);} //La actualizacion se hace una vez por dia 
+            catch (InterruptedException ex){}
+            usersUpdate();
+            deleteEvents();
+        }
+    }
+      
     public void usersUpdate(){
         database.update("UPDATE users_user SET is_active = 0 WHERE expiration_date <'"+LocalDate.now().toString()+"'");
     }

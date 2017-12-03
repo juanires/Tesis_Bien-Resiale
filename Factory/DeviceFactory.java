@@ -29,6 +29,9 @@ public abstract class DeviceFactory {
         device.setDevice(null);
         device.start();
         
+        try {Thread.sleep(20);} 
+        catch (InterruptedException ex) {}
+        
         return device;
     } 
     
@@ -46,6 +49,9 @@ public abstract class DeviceFactory {
         device.setTime(0);
         device.setDevice(null);
         device.start();
+        
+        try {Thread.sleep(20);} 
+        catch (InterruptedException ex) {}
         
         return device;
     } 
@@ -65,6 +71,9 @@ public abstract class DeviceFactory {
         device.setDevice(null);
         device.start();
         
+        try {Thread.sleep(20);} 
+        catch (InterruptedException ex) {}
+        
         return device;
     } 
     
@@ -82,6 +91,9 @@ public abstract class DeviceFactory {
         device.setTime(0);
         device.setDevice(codeReader);
         device.start();
+        
+        try {Thread.sleep(20);} 
+        catch (InterruptedException ex) {}
         
         return device;
     }
@@ -101,8 +113,9 @@ public abstract class DeviceFactory {
         device.setDevice(codeReader);
         device.start();
         
+        try {Thread.sleep(20);} 
+        catch (InterruptedException ex) {}
+        
         return device;
     }
-  
-    
 }

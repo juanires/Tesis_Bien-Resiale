@@ -3,6 +3,7 @@ import Device.Device;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
+import static java.lang.Thread.MAX_PRIORITY;
 import java.time.LocalTime;
 
 
@@ -58,7 +59,7 @@ public class GpioOutputBell extends Device implements Runnable {
         while(true){
      //----------------ACCIONES QUE REALIZA EL HILO-----------------------
             if(isActive()){
-                
+                 monitor.disparar(transitions.get(0));
                // monitor.disparar(transitions.get(0));
                 ring();
             }
@@ -71,42 +72,15 @@ public class GpioOutputBell extends Device implements Runnable {
     
     private void ring(){
        
-        monitor.disparar(transitions.get(0));
-/*        pin.high();
-
-        if(time == 0){ //Si no tiene tiempo asociado, debe ejecutar una transicion para apagarse
-            monitor.disparar(transitions.get(1));
-            pin.low();
-        }
-        else{//Si tiene tiempo asociado, despues de que éste transcurre se apaga.
-            try {Thread.sleep(time*1000);} 
-            catch (InterruptedException ex) {}
-            pin.low();
-        }*/
-        LocalTime finalize3;
-        LocalTime finalize2;
-       // LocalTime finalize = LocalTime.now().plusSeconds(time); //Al tiempo actual se le añaden los segundos especificados en el campo time
-       // while(LocalTime.now().isBefore(finalize)){ //Mientras no hayan transcurrido los segundos
-            //Se genera un sonido de 250Hz
-            finalize2 = LocalTime.now().plusSeconds(1); //Duracion del tono
-            while(LocalTime.now().isBefore(finalize2)){ //Mientras no finalize la duracion del tono
-                finalize3 = LocalTime.now().plusNanos(500000); //Se fija el semi periodo de la señal
-                pin.high();
-                while(LocalTime.now().isBefore(finalize3));
-                finalize3 = LocalTime.now().plusNanos(500000);
-                pin.low();
-                while(LocalTime.now().isBefore(finalize3));
-            }
-            //SEGUNDO TONO
-            finalize2 = LocalTime.now().plusSeconds(1); //Duracion del tono
-            while(LocalTime.now().isBefore(finalize2)){ //Mientras no finalize la duracion del tono
-                finalize3 = LocalTime.now().plusNanos(200000); //Se fija el semi periodo de la señal
-                pin.high();
-                while(LocalTime.now().isBefore(finalize3));
-                finalize3 = LocalTime.now().plusNanos(200000);
-                pin.low();
-                while(LocalTime.now().isBefore(finalize3));
-         //   }
-        }
+       pin.high();
+       try {Thread.sleep(400);} 
+       catch (InterruptedException ex){}
+       pin.low();
+       try {Thread.sleep(200);} 
+       catch (InterruptedException ex){}
+       pin.high();
+       try {Thread.sleep(400);} 
+       catch (InterruptedException ex){}
+       pin.low();
     }
 }

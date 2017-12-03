@@ -1,6 +1,4 @@
 package ConcreteDeviceFactory;
-
-import ConcreteDevice.GpioOutput;
 import ConcreteDevice.SerialComunications;
 import Device.Device;
 import Factory.DeviceFactory;

@@ -1,7 +1,5 @@
 package ConcreteDeviceFactory;
-
 import ConcreteDevice.Camera;
-import ConcreteDevice.GpioOutput;
 import Device.Device;
 import Factory.DeviceFactory;
 

@@ -18,9 +18,7 @@ import java.util.Arrays;
 public class Main {
     
     public static void main(String[] args) {
-    
-        
-        
+            
         
         //VARIABLES
         LocalTime DETECTION_TIME_INIT_MOTION_SENSOR = LocalTime.of(20,00); // El inicio de deteccion es a las 20 hs
@@ -38,11 +36,7 @@ public class Main {
 
         //CREACION DE BASE DE DATOS
         DataBase dataBase = DataBaseFactory.getDataBase("/home/pi/ProyectoIntegrador/DjangoProjects/tesis/db.sqlite3","sqlite3"); 
-
-        DataBaseUpdater data = new DataBaseUpdater(dataBase);
-        data.deleteEvents();
-      
-/*
+        
         //CREACION DE FABRICAS
         DeviceFactory factoryGPIO = new GPIODeviceFactory();
         DeviceFactory factoryCamera = new CameraDeviceFactory();
@@ -63,13 +57,15 @@ public class Main {
         deviceController.addDevice(factoryCamera.implementsDevice(dataBase, monitor, Arrays.asList(5,16), "Camera", 8080 ,"Camera"));
         deviceController.addDevice(factorySerial.implementsDevice(monitor, Arrays.asList(0), "readerCode", "SerialComunications"));
         deviceController.addDevice(factoryCodeVerifier.implementsDevice(dataBase, monitor, Arrays.asList(6,27,15,1,14,15,28), "userCode", deviceController.getDevice("readerCode"), "CodeVerifier"));
-        deviceController.addDevice(factoryWebEvent.implementsDevice(dataBase, monitor, Arrays.asList(23,12,24), "sendCode", 9000, deviceController.getDevice("readerCode"), "WebEventSendCode"));
-        deviceController.addDevice(factoryWebEvent.implementsDevice(dataBase, monitor, Arrays.asList(22,15,13), "WebOpenDoor", 9001, deviceController.getDevice("readerCode"), "WebEventOpenDoor"));
+        deviceController.addDevice(factoryWebEvent.implementsDevice(dataBase, monitor, Arrays.asList(23,12,24), "sendCode", 50001, deviceController.getDevice("readerCode"), "WebEventSendCode"));
+        deviceController.addDevice(factoryWebEvent.implementsDevice(dataBase, monitor, Arrays.asList(22,15,13), "WebOpenDoor", 50000, deviceController.getDevice("readerCode"), "WebEventOpenDoor"));
 
-        
-
-       monitor.disparar(20);//SE INICIA EL PROGRAMA
-       monitor.disparar(19);//Se habilita el led Verde
+        //CREACION E INICIALIZACION DEL UPDATER(ACTUALIZADOR DE BASE DE DATOS)
+        DataBaseUpdater dataBaseUpdater = new DataBaseUpdater(dataBase);
+            
+        //SE DISPARAN LAS TRANSICIONES QUE HABILITAN LOS DISPOSITIVOS
+        monitor.disparar(20);//SE INICIA EL PROGRAMA
+        monitor.disparar(19);//Se habilita el led Verde
 
 
         while(true){
@@ -80,7 +76,7 @@ public class Main {
             //COMPROBACION DEL HORARIO EN QUE SE DETECTA MOVIMIENTO
             verifyTimeMotionSensor(deviceController, DETECTION_TIME_INIT_MOTION_SENSOR, DETECTION_TIME_FINALIZE_MOTION_SENSOR);
             
-            try {Thread.sleep(2000);} 
+            try {Thread.sleep(10000);} 
             catch (InterruptedException ex) {}
         }
     }
@@ -111,6 +107,6 @@ public class Main {
             if(deviceController.getDevice("movement").isActive()){  //Si esta activado
                 deviceController.getDevice("movement").setActive(false); //Se desactiva
             }
-        }*/
+        }
     }
 }
