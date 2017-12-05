@@ -14,20 +14,21 @@ import java.util.logging.Logger;
  */
 public class ReaderLastSnapshot {
        
-    private static final String PATH ="/home/pi/ProyectoIntegrador/DjangoProjects/tesis/events/static/events/";
-   
+    private static final String ABSOLUTE_PATH ="/home/pi/ProyectoIntegrador/DjangoProjects/tesis/events/static/events/images/";
+    private static final String RELATIVE_PATH ="/events/images/";
+    
     public static String read(){
           
         try{
             // Se lanza el ejecutable.
             Process p;
-            p = Runtime.getRuntime().exec("readlink " + PATH + "lastsnap.jpg");
+            p = Runtime.getRuntime().exec("readlink " + ABSOLUTE_PATH + "lastsnap.jpg");
             // Se obtiene el stream de salida del programa
             InputStream is = p.getInputStream();
             /* Se prepara un bufferedReader para poder leer la salida más comodamente. */
             BufferedReader br = new BufferedReader (new InputStreamReader (is));
             // Se lee la primera linea
-            return PATH + br.readLine();
+            return RELATIVE_PATH + br.readLine();
             
         }
         catch (IOException ex) {

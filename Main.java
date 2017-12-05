@@ -66,7 +66,7 @@ public class Main {
         //SE DISPARAN LAS TRANSICIONES QUE HABILITAN LOS DISPOSITIVOS
         monitor.disparar(20);//SE INICIA EL PROGRAMA
         monitor.disparar(19);//Se habilita el led Verde
-
+  
 
         while(true){
             
