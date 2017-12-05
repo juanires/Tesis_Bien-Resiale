@@ -28,6 +28,7 @@ public class ReaderLastSnapshot {
             BufferedReader br = new BufferedReader (new InputStreamReader (is));
             // Se lee la primera linea
             return PATH + br.readLine();
+            
         }
         catch (IOException ex) {
             Logger.getLogger(ReaderLastSnapshot.class.getName()).log(Level.SEVERE, null, ex);

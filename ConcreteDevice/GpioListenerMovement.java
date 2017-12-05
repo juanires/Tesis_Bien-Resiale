@@ -63,7 +63,7 @@ public class GpioListenerMovement extends Device {
             @Override
             public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
                 // Acciones a realizar cuando se recibe un nivel alto
-                if(event.getState().toString().equals("HIGH")){
+                if(event.getState().toString().equals("LOW")){
                   //AQUI SE REALIZAN LOS DISPAROS DEL MONITOR
                     System.out.println( name + " HIGH");
                     monitor.disparar(transitions.get(0));

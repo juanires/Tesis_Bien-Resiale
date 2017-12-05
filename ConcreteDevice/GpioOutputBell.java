@@ -73,13 +73,13 @@ public class GpioOutputBell extends Device implements Runnable {
     private void ring(){
        
        pin.high();
-       try {Thread.sleep(400);} 
+       try {Thread.sleep(150);} 
        catch (InterruptedException ex){}
        pin.low();
-       try {Thread.sleep(200);} 
+       try {Thread.sleep(30);} 
        catch (InterruptedException ex){}
        pin.high();
-       try {Thread.sleep(400);} 
+       try {Thread.sleep(150);} 
        catch (InterruptedException ex){}
        pin.low();
     }

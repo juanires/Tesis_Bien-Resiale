@@ -30,7 +30,7 @@ public class DataBaseUpdater implements Runnable {
     @Override
     public void run() {
         while(true){
-            
+           
             try {Thread.sleep(86400000);} //La actualizacion se hace una vez por dia 
             catch (InterruptedException ex){}
             usersUpdate();
@@ -39,7 +39,7 @@ public class DataBaseUpdater implements Runnable {
     }
       
     public void usersUpdate(){
-        database.update("UPDATE users_user SET is_active = 0 WHERE expiration_date <'"+LocalDate.now().toString()+"'");
+        database.update("UPDATE users_user SET is_active = 0 WHERE is_staff = 0 and expiration_date <'"+LocalDate.now().toString()+"'");
     }
     
     public void deleteEvents(){
