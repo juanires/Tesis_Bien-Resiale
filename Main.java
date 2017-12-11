@@ -4,6 +4,7 @@ import ServiceController.ServiceController;
 import DeviceController.DeviceController;
 import Factory.*;
 import Monitor.*;
+import Readers.*;
 import SoftwareInterface.SIDeviceController;
 import SoftwareInterface.SIServiceController;
 import Updaters.DataBaseUpdater;
@@ -21,8 +22,8 @@ public class Main {
             
         
         //VARIABLES
-        LocalTime DETECTION_TIME_INIT_MOTION_SENSOR = LocalTime.of(20,00); // El inicio de deteccion es a las 20 hs
-        LocalTime DETECTION_TIME_FINALIZE_MOTION_SENSOR = LocalTime.of(7,45); // La finalizacion de deteccion es a las 7.45 hs
+        LocalTime DETECTION_TIME_INIT_MOTION_SENSOR = LocalTime.of(7,00); // El inicio de deteccion es a las 20 hs
+        LocalTime DETECTION_TIME_FINALIZE_MOTION_SENSOR = LocalTime.of(20,45); // La finalizacion de deteccion es a las 7.45 hs
         
         
         //CREACION MONITOR
@@ -98,7 +99,8 @@ public class Main {
      
     static public void verifyTimeMotionSensor(SIDeviceController deviceController,LocalTime detectionTimeInit,LocalTime detectionTimeFinalize){
        //Se obtiene la hora actual y se verificaa si esta en el rango horario de deteccion
-        if(LocalTime.now().isAfter(detectionTimeInit) || LocalTime.now().isBefore(detectionTimeFinalize)){
+     
+       if(ReaderTime.isTimeSlot(detectionTimeInit, detectionTimeFinalize)){
             if(!deviceController.getDevice("movement").isActive()){ //Si el dispositivo no esta activo
                 deviceController.getDevice("movement").setActive(true); //Se activa
             }

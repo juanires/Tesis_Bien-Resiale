@@ -1,9 +1,13 @@
 package Readers;
 
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 /**
  *
  * @author Compuj
@@ -11,7 +15,7 @@ import java.util.GregorianCalendar;
 public class ReaderDate {
     
     public static String read(){
-        
+        /*
         Date d = new Date();
         Calendar c = new GregorianCalendar(); 
         c.setTime(d);
@@ -24,5 +28,9 @@ public class ReaderDate {
         String second = Integer.toString(c.get(Calendar.SECOND));
         
         return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second; 
+        */
+       // LocalDateTime.now(ZoneId.of("UTC"));
+        return LocalDateTime.now().toString();
     }
+    
 }

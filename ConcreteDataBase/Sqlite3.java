@@ -1,6 +1,7 @@
 package ConcreteDataBase;
 
 import DataBase.DataBase;
+import Readers.ReaderTime;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -158,7 +159,7 @@ public class Sqlite3 extends DataBase  {
                 else{ //Si NO es administrador
                     LocalTime begin = LocalTime.parse(result.getString("begin"), DateTimeFormatter.ISO_LOCAL_TIME);
                     LocalTime end = LocalTime.parse(result.getString("end"), DateTimeFormatter.ISO_LOCAL_TIME);
-                    if(LocalTime.now().isAfter(begin) && LocalTime.now().isBefore(end)){
+                    if(ReaderTime.isTimeSlot(begin, end)){
                        userId = result.getInt("id");
                     }
                 }
