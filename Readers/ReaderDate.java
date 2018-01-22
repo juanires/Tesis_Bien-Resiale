@@ -1,36 +1,23 @@
 package Readers;
-
-
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZoneId;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
+
 /**
- *
- * @author Compuj
+ * Clase que lee la fecha actual.
+ * 
+ * @author Bien Christopher - Resiale Juan.
+ * 2018 - Córdoba, Argentina. 
  */
 public class ReaderDate {
     
+    /**
+    * Lee la fecha actual.
+    * @return la fecha actual en formato UTC.
+    */
     public static String read(){
-        /*
-        Date d = new Date();
-        Calendar c = new GregorianCalendar(); 
-        c.setTime(d);
-
-        String day = Integer.toString(c.get(Calendar.DATE));
-        String month = Integer.toString(c.get(Calendar.MONTH));
-        String year = Integer.toString(c.get(Calendar.YEAR));
-        String hour = Integer.toString(c.get(Calendar.HOUR_OF_DAY));
-        String minute = Integer.toString(c.get(Calendar.MINUTE));
-        String second = Integer.toString(c.get(Calendar.SECOND));
         
-        return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second; 
-        */
-       // LocalDateTime.now(ZoneId.of("UTC"));
-        return LocalDateTime.now().toString();
+       return LocalDateTime.now(ZoneId.of("UTC")).toString();
+        //return LocalDateTime.now().toString();
     }
     
 }

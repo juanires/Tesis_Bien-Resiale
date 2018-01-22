@@ -4,8 +4,11 @@ import java.io.File;
 import java.util.Scanner;
 
 /**
- *
- * @author Compuj
+ * Clase que lee y almacena las matrices de incidencia y estado desde un direcctorio específico. Las matrices
+ * deben ser archivos ".txt".
+ * 
+ * @author Bien Christopher - Resiale Juan.
+ * 2018 - Córdoba, Argentina. 
  */
 public class LectorDeMatriz {
     
@@ -16,6 +19,15 @@ public class LectorDeMatriz {
     private String urlMatrizIncidencia;
     private String urlMatrizEstado;
     
+    /**
+     * Crea un nuevo objeto LectorDeMatriz.
+     * @param transiciones cantidad de transiciones de la red.
+     * @param plazas cantidad de plazas de la red.
+     * @param matrizIncidencia arreglo de dos dimensiones donde se cargará la matriz de incidencia.
+     * @param matrizEstado arrglo donde se cargará la matriz de estado.
+     * @param urlMatrizIncidencia url del archivo que almacena la matriz de incidencia.
+     * @param urlMatrizEstado url del archivo que almacena la matriz de estado.
+     */
     public LectorDeMatriz(int transiciones, int plazas, int [][] matrizIncidencia, int[] matrizEstado, String urlMatrizIncidencia, String urlMatrizEstado){
 		
         this.matrizIncidencia =  matrizIncidencia;
@@ -26,6 +38,9 @@ public class LectorDeMatriz {
         this.urlMatrizEstado = urlMatrizEstado;
     }
     
+    /**
+     * Carga las matrices de estado e incidencia.
+     */
     public void leer(){
 
         try{

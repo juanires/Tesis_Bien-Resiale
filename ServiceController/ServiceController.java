@@ -7,7 +7,8 @@ import java.util.ArrayList;
  * Clase para controlar uno o más servicios. 
  * Describe todas las operaciones sobre el grupo de servicios.
  * 
- * @author Bien Christopher - Resiale Juan
+ * @author Bien Christopher - Resiale Juan.
+ * 2018 - Córdoba, Argentina.
  */
 public class ServiceController implements SIServiceController {
     
@@ -23,7 +24,7 @@ public class ServiceController implements SIServiceController {
     /**
     * Agregar servicio al controlador. 
     * 
-    * @param servicio El servicio que se quiere agregar al controlador.
+    * @param service El servicio que se quiere agregar al controlador.
     */
     @Override
     public void addService(Service service){
@@ -35,7 +36,7 @@ public class ServiceController implements SIServiceController {
     * Cargar e iniciar el servicio. Se verifica que sea un servicio cargado
     * previamente en el controlador, y si es así se lo intenta iniciar.
     * 
-    * @param service Servicio a iniciar.
+    * @param nameService Servicio a iniciar.
     * @return 1 si el servicio se ha iniciado correctamente, de lo contrario
     * retorna 0.
     */
@@ -50,9 +51,8 @@ public class ServiceController implements SIServiceController {
         }
         return 0;
     }
-    
-   
-     /**
+       
+    /**
     * Iniciar todos los service del controlador. 
     * 
     * @return 1 si todos los servicios del controlador se han iniciado

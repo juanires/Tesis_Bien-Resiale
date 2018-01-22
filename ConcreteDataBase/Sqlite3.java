@@ -1,5 +1,4 @@
 package ConcreteDataBase;
-
 import DataBase.DataBase;
 import Readers.ReaderTime;
 import java.sql.Connection;
@@ -12,13 +11,14 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author Compuj
+ * Esta clase interactua con una base de datos sqlite3. 
+ * 
+ * @author Bien Christopher - Resiale Juan.
+ * 2018 - Córdoba, Argentina. 
  */
 
 public class Sqlite3 extends DataBase  {
@@ -32,7 +32,6 @@ public class Sqlite3 extends DataBase  {
     */
     public Sqlite3(String url){
         this.url= url;
-       // connect();
     }
     
     /**
@@ -67,7 +66,7 @@ public class Sqlite3 extends DataBase  {
     
     /**
     * Consultar a la base de datos. 
-    * @param consult Consulta sql a ejecutar.
+    * @param sqlStatement Consulta sql a ejecutar.
     * @return ResultSet. Retorna el resultado de la consulta.
     */
     @Override
@@ -85,6 +84,7 @@ public class Sqlite3 extends DataBase  {
     }
     
     
+    @Override
     public int insert(String sqlStatement){
       connect();
         try {
@@ -100,6 +100,7 @@ public class Sqlite3 extends DataBase  {
         return 1;
     }
     
+    @Override
     public int update(String sqlStatement){
         
         connect();
@@ -116,6 +117,7 @@ public class Sqlite3 extends DataBase  {
         return 1;
     }
     
+    @Override
     protected int delete(String sqlStatement){
         try {
             PreparedStatement st = connect.prepareStatement(sqlStatement);
@@ -132,10 +134,9 @@ public class Sqlite3 extends DataBase  {
     /**
     * Comprobar si es un ususario registrado. Se comprueba si el código
     * que se pasa como parámetro se corresponde con el codigo de un usuario
-    * cargado en la base de datos. En esta funcion se conecta con la base de
-    * datos, se realiza la cosulta y luego se desconecta la base de datos.
+    * cargado en la base de datos. 
     * 
-    * @param codigo Código a consultar.
+    * @param code Código a consultar.
     * 
     * @return true si el codigo corresponde a un usuario registrado, de lo 
     * contrario retorna false.
@@ -144,27 +145,24 @@ public class Sqlite3 extends DataBase  {
     public int registeredUser(String code){
        
         int userId = -1;
-        String dayOfWeek = LocalDate.now().getDayOfWeek().toString().toLowerCase().concat("_id");; //Se obtiene el nombre del dia de la semana 
+        String dayOfWeek = LocalDate.now().getDayOfWeek().toString().toLowerCase().concat("_id"); //Se obtiene el nombre del dia de la semana 
        //Como en la tabla estos campos son claves foraneas y por esto Django le agrega "_id", tambien se lo agrega para que coincida con el nombre del campo
         
         connect();
         ResultSet result = consult("SELECT user.id, is_staff, begin, end FROM users_user as user, users_timezone as time WHERE user.code='"+code+"' and user.is_active = 1 and "+dayOfWeek+"= time.id");
-        //ResultSet result = consult("SELECT user.id, is_staff, begin, end FROM users_user as user, users_timezone as time WHERE user.id=3 and user.is_active = 1 and "+dayOfWeek+"= time.id");
         if(result!=null){
             try {
                 result.next();
                 if(result.getBoolean("is_staff")){ //Si es administrador
                     userId = result.getInt("id"); //No se verifica la franja horaria
                 }
-                else{ //Si NO es administrador
+                else{ //Si NO es administrador, se verifica la franja horaria
                     LocalTime begin = LocalTime.parse(result.getString("begin"), DateTimeFormatter.ISO_LOCAL_TIME);
                     LocalTime end = LocalTime.parse(result.getString("end"), DateTimeFormatter.ISO_LOCAL_TIME);
                     if(ReaderTime.isTimeSlot(begin, end)){
                        userId = result.getInt("id");
                     }
                 }
-                /*while (result.next()) { //De los resultados obtenidos se consulta si alguno esta activo
-                }*/
             } 
             catch (SQLException ex) {
                 //Logger.getLogger(ConcreteDataBase.Sqlite3.class.getName()).log(Level.SEVERE, null, ex);
@@ -201,6 +199,7 @@ public class Sqlite3 extends DataBase  {
         return imagesOfEventsToBeDeleted;
     }
     
+    @Override
     public ArrayList tablesList(){
         ArrayList<String> tables = new ArrayList();
         connect();
@@ -218,5 +217,4 @@ public class Sqlite3 extends DataBase  {
         disconnect();
         return tables;
     }
-    
 }

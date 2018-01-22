@@ -1,5 +1,4 @@
 package ConcreteDevice;
-
 import Readers.ReaderLastSnapshot;
 import Readers.ReaderDate;
 import Device.Device;
@@ -12,8 +11,11 @@ import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
 
 /**
- *
- * @author Compuj
+ * Esta clase se encarga de verificar si se ha detectado movimiento. Esto lo realiza creando un listener que
+ * detecta cuando hay un cambio de nivel lógico de "alto" a "bajo" en el pin asignado a este objeto. 
+ * 
+ * @author Bien Christopher - Resiale Juan.
+ * 2018 - Córdoba, Argentina. 
  */
 public class GpioListenerMovement extends Device {
     
@@ -21,12 +23,19 @@ public class GpioListenerMovement extends Device {
     private GpioPinListenerDigital listener;
     private Pin pin;
     
+    /**
+    * Crea un nuevo objeto GpioListenerMovement.
+    */
     public GpioListenerMovement(){
        
         myButton = null;
         listener = null;
     }
     
+    /**
+    * Se realiza la configuración del objeto.
+    * Para más informacion visitar http://pi4j.com/example/listener.html para entender las configuraciones que se realizan.
+    */
     @Override
     protected void configure(){
         pin = RaspiPin.getPinByAddress(pinNumber);
@@ -35,6 +44,10 @@ public class GpioListenerMovement extends Device {
         myButton.setDebounce(500);
     }
 
+    /**
+    * Configura, crea e inicializa el listener, y activa el objeto. La activación del objeto se hace mediante la llamada al método
+    * "setActive(true)" de la clase abstracta.
+    */
     @Override
     public void start() {
         configure();
@@ -42,6 +55,11 @@ public class GpioListenerMovement extends Device {
         setActive(true);
     }
 
+    /**
+    * Activa o desactiva la acción que realiza el objeto. Al desactivar, se remueve el listener; al activar, se agrega el
+    * listener.
+    * @param option "true" para activar, "false" para desactivar.
+    */
     @Override
     protected void active(boolean option) {
         if (option){
@@ -52,10 +70,19 @@ public class GpioListenerMovement extends Device {
         }
     }
     
+    /**
+    * No se implementa para objeto.
+    * @return null.
+    */   
     public String getCode(){
         return null;
     }
     
+    /**
+    * Se activa el listener. Dentro del cuerpo de éste método se crea un nuevo objeto "GpioPinListenerDigital" y se sobreescribe
+    * su método "handleGpioPinDigitalStateChangeEvent" que es donde se epecifican las acciones que debe realizar el hilo cuando detecta
+    * un cambio de nivel lógico en el pin. En este caso se realizan las acciones cuando se detecte un cambio de "HIGH" a "LOW".
+    */
     private void activeListener(){
         
         listener= new GpioPinListenerDigital() {
@@ -65,7 +92,7 @@ public class GpioListenerMovement extends Device {
                 // Acciones a realizar cuando se recibe un nivel alto
                 if(event.getState().toString().equals("LOW")){
                   //AQUI SE REALIZAN LOS DISPAROS DEL MONITOR
-                    System.out.println( name + " HIGH");
+                    System.out.println( name + " LOW");
                     monitor.disparar(transitions.get(0));
                     monitor.disparar(transitions.get(1));
                     //Ahora se guarda en base de datos
@@ -77,10 +104,19 @@ public class GpioListenerMovement extends Device {
         };
     }
     
+    /**
+    * Retorna el GPIO asignado al objeto.
+    * @return pinNumber. 
+    */
     public int getPinNumber(){
         return pinNumber;
     }
     
+    /**
+    * No se implementa para objeto.
+    * @return 0.
+    */
+    @Override
     public int getPinState(){
         return 0;
     }

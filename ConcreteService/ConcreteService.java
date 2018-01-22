@@ -8,8 +8,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author Compuj
+ * Esta clase representa un servicio que corre en el sistema embebido. 
+ * 
+ * @author Bien Christopher - Resiale Juan.
+ * 2018 - Córdoba, Argentina. 
  */
 public class ConcreteService extends Service {
     
@@ -19,7 +21,7 @@ public class ConcreteService extends Service {
     /**
     * Crea un nuevo servicio. 
     * 
-    * @param servicio Nombre del servicio que se quiere asociar al objeto.
+    * @param nameService Nombre del servicio que se quiere asociar al objeto.
     */
     public ConcreteService(String nameService){
         this.nameService = nameService;
@@ -151,5 +153,4 @@ public class ConcreteService extends Service {
         
         return nameService;
     }
-    
 }

@@ -1,10 +1,11 @@
 package Monitor;
 import java.util.concurrent.Semaphore;
-import java.util.ArrayList;
 
 /**
- *
- * @author Compuj
+ * Clase que representa a un monitor.  
+ * 
+ * @author Bien Christopher - Resiale Juan.
+ * 2018 - Córdoba, Argentina. 
  */
 
 public class Monitor {
@@ -14,6 +15,10 @@ public class Monitor {
     private VariableDeCondicion [] VCondicion; //Arreglo de variables de condicion, cada elemento del arreglo es una variable de condicion de la red
     private Politica politica;
 
+    /**
+     * Crea un nuevo monitor.
+     * @param R procesador petri que maneja la lógica del monitor.
+     */
     public Monitor(ProcesadorPetri R){
 
         Entrada = new Semaphore(1, true);
@@ -27,7 +32,10 @@ public class Monitor {
         }
     }
 
-
+    /**
+     * Disparar una transición.
+     * @param disparo número de la transición a disparar.
+     */
     public void disparar(int disparo){
 
         try {
@@ -63,9 +71,10 @@ public class Monitor {
         }		
     } 
 
-    /*
-     * Retorna la cantidad de hilos bloqueados en la VC especificada por el parametro d
-     * 
+    /**
+     * Retorna la cantidad de hilos bloqueados en la VC especificada por el parametro d.
+     * @param d número de transición.
+     * @return numero de hilos bloqueados en la transición.
      */
     public int getBloqueados(int d){ 
         return VCondicion[d].getBloqueados();

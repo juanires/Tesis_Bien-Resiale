@@ -1,17 +1,25 @@
 package DeviceController;
-
 import Device.Device;
 import SoftwareInterface.SIDeviceController;
 import java.util.HashMap;
 
 /**
- *
- * @author Compuj
+ * Clase que representa a un controlador de dispositivos. Mediante esta clase se puede interactuar con un conjunto
+ * de dispositivos "Device" pudiendo acceder a las funciones de los mismos. De esta forma se encapsula el control
+ * y la interacción con los dispositivos.
+ * 
+ * @author Bien Christopher - Resiale Juan.
+ * 2018 - Córdoba, Argentina. 
  */
 public class DeviceController implements SIDeviceController {
 
     private HashMap <String, Device> mapDevice;
     
+    /**
+    * Crea un nuevo controlador de dispositivos.
+    * 
+    * @param devicesNumber numero de dispositivos a controlar.
+    */
     public DeviceController (int devicesNumber){
         
         mapDevice = new HashMap(devicesNumber);

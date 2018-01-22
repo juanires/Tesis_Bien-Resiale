@@ -1,8 +1,10 @@
 package Service;
 
 /**
- *
- * @author Compuj
+ * Interfaz que define los métodos para interactuar con un servicio.
+ * 
+ * @author Bien Christopher - Resiale Juan.
+ * 2018 - Córdoba, Argentina. 
  */
 public abstract class Service {
     

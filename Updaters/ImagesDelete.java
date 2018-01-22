@@ -1,28 +1,26 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Updaters;
-
 import Readers.ReaderLastSnapshot;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author Compuj
+ * Borra las imágenes almacenadas en un directorio determinado. El directorio es el establecido
+ * en el campo ABSOLUTE_PATH.
+ * 
+ * @author Bien Christopher - Resiale Juan.
+ * 2018 - Córdoba, Argentina. 
  */
 public class ImagesDelete {
   
     private static final String ABSOLUTE_PATH ="/home/pi/ProyectoIntegrador/DjangoProjects/tesis/events/static/events/images/";
     private static final String RELATIVE_PATH ="/events/images/";
     
+    /**
+     * Borra la lista de imágenes que se pasa como parámetro.  
+     * @param images lista de los nombres de las imágenes a borrar.
+     */
     public static void clean(ArrayList<String> images){
         int count = 0;
        

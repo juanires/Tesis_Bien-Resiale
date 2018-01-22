@@ -4,22 +4,34 @@ import Readers.ReaderDate;
 import Readers.ReaderLastSnapshot;
 
 /**
- *
- * @author Compuj
+ * Esta clase se encarga de verificar el código leído por el lector y actuar en consecuencia. 
+ * 
+ * @author Bien Christopher - Resiale Juan.
+ * 2018 - Córdoba, Argentina. 
  */
 public class CodeVerifier extends Device implements Runnable{
 
     private Thread thread;
     private int userId;
     
+    /**
+    * Crea un nuevo objeto CodeVerifier.
+    */
     public CodeVerifier(){
         thread = null;
         userId = -1;
     }
     
+    /**
+    * Se realiza la configuración del objeto. En este caso en particular es un método con un cuerpo vacío.
+    */
     @Override
     protected void configure() {}
 
+    /**
+    * Crea e inicializa el hilo, configura y activa el objeto. La activación del objeto se hace mediante la llamada al método
+    * "setActive(true)" de la clase abstracta.
+    */
     @Override
     public void start() {
         
@@ -30,9 +42,39 @@ public class CodeVerifier extends Device implements Runnable{
         setActive(true);
     }
 
+    /**
+    * Activa o desactiva la acción que realiza el objeto.
+    * @param option "true" para activar, "false" para desactivar.
+    */
     @Override
     public void active(boolean option) {}
-
+    
+     /**
+    * No se implementa para objeto.
+    * @return null.
+    */
+    @Override
+    public String getCode(){
+        return null;
+    }
+    
+    /**
+    * No se implementa para objeto.
+    * @return 0.
+    */
+    public int getPinState(){
+        return 0;
+    }
+    
+    /**
+    * Ejecuta las acciones del objeto. En el cuerpo de éste método se establecen las acciones que realiza el objeto.
+    * En este caso, se comprueba si el código leido se corresponde con un usuario de la base de datos que tenga el acceso habilitado
+    * para la hora y dia actual:
+    * Si el resultado obtenido se corresponde con un número mayor a cero (id del usuario), entonces se abre la puerta y registra 
+    * el evento en la base de datos (en la tabla "events_permittedaccess").
+    * Si el resultado obtenido es cero (no está permitido el ingreso), entonces registra el evento en la base de datos
+    * (en la tabla "events_deniedaccess").
+    */
     @Override
     public void run() {
        
@@ -59,14 +101,4 @@ public class CodeVerifier extends Device implements Runnable{
             }
         }
     }
-    
-    @Override
-    public String getCode(){
-        return null;
-    }
-    
-    public int getPinState(){
-        return 0;
-    }
-    
 }

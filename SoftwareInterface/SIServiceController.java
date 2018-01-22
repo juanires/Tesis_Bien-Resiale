@@ -13,14 +13,14 @@ public interface SIServiceController {
     /**
     * Agregar servicio al controlador. 
     * 
-    * @param servicio El servicio que se quiere agregar al controlador.
+    * @param service El servicio que se quiere agregar al controlador.
     */
     void addService(Service service);
        
     /**
     * Cargar e iniciar el servicio. 
     * 
-    * @param servicio Servicio a iniciar.
+    * @param nameService nombre del servicio a iniciar.
     * @return 1 si el servicio se ha iniciado correctamente, de lo contrario
     * retorna 0.
     */
@@ -35,14 +35,22 @@ public interface SIServiceController {
     */
     int startAllServices();
     
-   
+   /**
+    * Detiene un servicio.
+    * @param nameService nombre del servicio a detener.
+    * @return 1 si el servicio se detuvo correctamente, de lo contrario retorna 0. 
+    */
     int stopService (String nameService);
     
+    /**
+     * Detiene todos los servicios.
+     * @return 1 si los servicios se detuvieron correctamente, de lo contrario retorna 0. 
+     */
     int stopAllService ();
     /**
     * Estado de un servicio del controlador. 
     * 
-    * @param servicio Servicio del que se quiere conocer el estado.
+    * @param service Servicio del que se quiere conocer el estado.
     * @return 1 si el servicio se encuentra activo, de lo contrario retorna 0.
     */
     int stateService(Service service);

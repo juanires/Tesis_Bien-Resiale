@@ -4,28 +4,40 @@ import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
-
 /**
- *
- * @author Compuj
+ * Esta clase se encarga de controlar el funcionamiento de una cerradura (eléctrica o magnética). 
+ * 
+ * @author Bien Christopher - Resiale Juan.
+ * 2018 - Córdoba, Argentina. 
  */
 public class GpioOutputLock extends Device implements Runnable {
 
     private GpioPinDigitalOutput pin;
     private Thread thread;
   
+    /**
+    * Crea un nuevo objeto GpioOutputLed.
+    */
     public GpioOutputLock(){
         
         pin = null;
         thread = null;
     }
     
+    /**
+    * Se realiza la configuración del objeto.
+    * Para más informacion visitar http://pi4j.com/example/control.html para entender las configuraciones que se realizan.
+    */
     @Override
     protected void configure() {
        pin = gpio.provisionDigitalOutputPin(RaspiPin.getPinByAddress(pinNumber),PinState.LOW);
        pin.setShutdownOptions(true, PinState.LOW);
     }
 
+    /**
+    * Configura el pin, crea e inicializa el hilo que ejecuta las acciones y activa el objeto. La activación del objeto se hace mediante la llamada al método
+    * "setActive(true)" de la clase abstracta.
+    */
     @Override
     public void start() {
         configure();
@@ -37,21 +49,34 @@ public class GpioOutputLock extends Device implements Runnable {
         setActive(true);
     }
 
+    /**
+    * No se implementa para objeto.
+    */
     @Override
     protected void active(boolean option) {}
 
-    
+    /**
+    * No se implementa para objeto.
+    * @return null.
+    */ 
     @Override
     public String getCode(){
         return null;
     }
     
-     public int getPinState(){
+    /**
+    * Retorna el estado del pin.
+    * @return 1 si es "alto", 0 si es "bajo".
+    */ 
+    public int getPinState(){
         if(pin.isHigh())
             return 1;
         return 0;
     }
     
+    /**
+    * Realiza las acciones del objeto GpioOutputLock.
+    */
     @Override
     public void run() {
         while(true){
@@ -73,10 +98,11 @@ public class GpioOutputLock extends Device implements Runnable {
             }
         }
     }
-    
+    /**
+    * Retorna el GPIO asignado al objeto.
+    * @return pinNumber. 
+    */
     public int getPinNumber(){
         return pinNumber;
     }
-    
-    
 }

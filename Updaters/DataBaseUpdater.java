@@ -5,8 +5,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
- *
- * @author Compuj
+ * Actualiza la base de datos. Las actualizaciones se realizan cada 24 horas, y se actualiza:
+ * # Se da de baja un usuario de cuerdo a su fecha de expiración.
+ * # Borrado de eventos cuya fecha de ocurrencia supera el tiempo establecido.
+ * 
+ * @author Bien Christopher - Resiale Juan.
+ * 2018 - Córdoba, Argentina. 
  */
 public class DataBaseUpdater implements Runnable {
     
@@ -18,6 +22,10 @@ public class DataBaseUpdater implements Runnable {
     int monthsLimit;
     int daysLimit;
     
+    /**
+     * Crea un nuevo objeto DataBaseUpdater.
+     * @param database base de datos a actualizar.
+     */
     public DataBaseUpdater(DataBase database){
         thread = new Thread(this);
         this.database = database;
@@ -27,6 +35,9 @@ public class DataBaseUpdater implements Runnable {
         thread.start();
     }
     
+    /**
+     * Método que lleva a cabo la ejecución de las actualizaciones cada 24hs.
+     */
     @Override
     public void run() {
         while(true){
@@ -37,16 +48,26 @@ public class DataBaseUpdater implements Runnable {
             deleteEvents();
         }
     }
-      
+     
+    /**
+     * Se da de baja un usuario si ya ha transcurrido su fecha de expiración.
+    */
     public void usersUpdate(){
         database.update("UPDATE users_user SET is_active = 0 WHERE is_staff = 0 and expiration_date <'"+LocalDate.now().toString()+"'");
     }
     
+    /**
+     * Se eliminan todos los eventos y fotos asociadas a los mismos, cuya fecha de ocurrencia más el tiempo 
+     * establecido (mediante el método setTimeLapseOfDeleteEvents) supera a la fecha actual.
+     */
     public void deleteEvents(){
         limitTime = LocalDateTime.now().minusYears(yearsLimit).minusMonths(monthsLimit).minusDays(daysLimit);
         ImagesDelete.clean(database.deleteEvents(limitTime, tablesOfEvents));
     }
     
+    /**
+     * Caga el nombre de las tablas de eventos. 
+     */
     protected void loadTableName(){
         ArrayList<String> tables = database.tablesList();
         int count = 0;
@@ -57,6 +78,12 @@ public class DataBaseUpdater implements Runnable {
         }
     }
     
+    /**
+     * Se establece el tiempo que tiene que transcurrir desde la ocurrencia del evento hasta que sea borrado.
+     * @param year
+     * @param month
+     * @param day 
+     */
     public void setTimeLapseOfDeleteEvents(int year,int month,int day){
         this.yearsLimit = year;
         this.monthsLimit = month;

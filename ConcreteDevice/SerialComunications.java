@@ -13,10 +13,11 @@ import com.pi4j.io.serial.SerialFactory;
 import com.pi4j.io.serial.StopBits;
 import java.io.IOException;
 
-
 /**
- *
- * @author Compuj
+ * Esta clase se encarga de interactuar con el lector RFID mediante el puerto serial. 
+ * 
+ * @author Bien Christopher - Resiale Juan.
+ * 2018 - Córdoba, Argentina. 
  */
 public class SerialComunications  extends Device {
 
@@ -24,13 +25,18 @@ public class SerialComunications  extends Device {
     private SerialDataEventListener listener;
     private String code;
     
+    /**
+    * Crea un nuevo objeto SerialComunications.
+    */
     public SerialComunications(){
-    
         serial = SerialFactory.createInstance();
         listener=null;
         code = null;
     }
     
+    /**
+    * Se configura el puerto serial. Para entender las connfiguraciones que se realizan visitar http://pi4j.com/apidocs/index.html
+    */
     @Override
     protected void configure() {
         // create serial config object
@@ -53,6 +59,10 @@ public class SerialComunications  extends Device {
         }
     }
 
+    /**
+    * Configura, crea e inicializa el listener, y activa el objeto. La activación del objeto se hace mediante la llamada al método
+    * "setActive(true)" de la clase abstracta.
+    */
     @Override
     public void start() {
         configure();
@@ -60,6 +70,11 @@ public class SerialComunications  extends Device {
         setActive(true);
     }
 
+    /**
+    * Activa o desactiva la acción que realiza el objeto. Al desactivar, se remueve el listener; al activar, se agrega el
+    * listener.
+    * @param option "true" para activar, "false" para desactivar.
+    */
     @Override
     protected void active(boolean option) {
         if (option){
@@ -71,12 +86,17 @@ public class SerialComunications  extends Device {
         }
     }
     
-     private void activeListener(){
+    /**
+    * Se activa el listener. Dentro del cuerpo de éste método se crea un nuevo objeto "SerialDataEventListener" y se sobreescribe
+    * su método "dataReceived" que es donde se epecifican las acciones que debe realizar el hilo cuando recibe informacion
+    * por el puerto serial. 
+    */
+    private void activeListener(){
          
-          listener = new SerialDataEventListener() {
+        listener = new SerialDataEventListener() {
             @Override
             public void dataReceived(SerialDataEvent event) {
-                
+
                 try {
                     //Es muy importante leer los datos recibidos del puerto serie. 
                     //Si no se lee el búfer de recepción, éste continuará creciendo y consumiendo memoria.
@@ -99,8 +119,11 @@ public class SerialComunications  extends Device {
                 }
             }
         };
-     }
+    }
     
+    /**
+     * Se limpia el buffer de recepción.
+    */
     private void cleanBuffer(){
          try {
             serial.discardInput(); //Se borra el buffer de recepcion
@@ -108,15 +131,29 @@ public class SerialComunications  extends Device {
         catch (IOException ex) {}
     }
     
+    /**
+     * Se guarda el código leído.
+     * @param code Código leído.
+     */
     private void setCode(String code){
         this.code = code;
         System.out.println(code);
     }
     
+    /**
+     * Retorna el código leído.
+     * @return code - código leído.
+     */
+    @Override
     public String getCode(){
         return code;
     }
     
+    /**
+    * No se implementa para objeto.
+    * @return 0.
+    */
+    @Override
      public int getPinState(){
         return 0;
     }
