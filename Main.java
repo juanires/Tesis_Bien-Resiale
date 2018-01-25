@@ -13,17 +13,41 @@ import com.pi4j.io.gpio.GpioFactory;
 import java.time.LocalTime;
 import java.util.Arrays;
 
-
+/**
+ * Clase principal. Inicializa todos los objetos que componen el sistema de control de acceso.
+ * En las variables DETECTION_TIME_INIT_MOTION_SENSOR y DETECTION_TIME_FINALIZE_MOTION_SENSOR se especifica
+ * la franja horaria en que se va a detectar movimiento, es decir se activa el sensor.
+ * CONEXIONES DE LOS DEVICES:
+ * # GPIO 2: Cerradura Magnética
+ * # GPIO 3: Campana
+ * # GPIO 4: Sensor de movimiento
+ * # GPIO 5: Pulsador
+ * # GPIO 12: Led verde
+ * # GPIO 13: Led amarillo
+ * # PUERTO 50000: Apertura de puerta desde la web
+ * # PUERTO 50001: Solicitud desde la web de envío de código
+ * # PUERTO USB: Cámara web
+ * 
+ * Cada 10 segundos: 1)Se realiza la comprobación de estado de los servicios 2) Se verifica si la hora actual
+ * está dentro de la franja de detección de movimiento.
+ * 
+ * 
+ * @author Bien Christopher - Resiale Juan.
+ * 2018 - Córdoba, Argentina. 
+ */
 
 
 public class Main {
-    
+    /**
+     * Ejecuta el programa principal.
+     * @param args 
+     */
     public static void main(String[] args) {
             
         
         //VARIABLES
-        LocalTime DETECTION_TIME_INIT_MOTION_SENSOR = LocalTime.of(7,00); // El inicio de deteccion es a las 20 hs
-        LocalTime DETECTION_TIME_FINALIZE_MOTION_SENSOR = LocalTime.of(20,45); // La finalizacion de deteccion es a las 7.45 hs
+        LocalTime DETECTION_TIME_INIT_MOTION_SENSOR = LocalTime.of(20,45); // El inicio de deteccion es a las 20 hs
+        LocalTime DETECTION_TIME_FINALIZE_MOTION_SENSOR = LocalTime.of(7,0); // La finalizacion de deteccion es a las 7.45 hs
         
         
         //CREACION MONITOR
@@ -82,6 +106,15 @@ public class Main {
         }
     }
     
+    /**
+     * Verifica el estado de los servicios. Cuando uno de los servicios  está detenido o no está funcionando
+     * correctamente, se enciende el Led amarillo para indicar que hay problemas con un servicio. Detectado este
+     * inconveniente se reinicia el servicio caído y se verifica nuevamente el estado, si todo es correcto se apaga
+     * el led amarillo, de lo contrario continúa encendido.
+     * @param monitor monitor que controla el funcionamiento de los dispositivos.
+     * @param serviceController controlador de servicios mediante el cual se interactúa con los servicios.
+     * @param deviceController  controlador de dispositivos mediante el cual se interactúa con los dispositivos.
+     */
     static public void verifyServices(Monitor monitor, SIServiceController serviceController,SIDeviceController deviceController){
         //COMPROBACION DEL FUNCIONAMIENTO DE SERVICIOS
         if (serviceController.stateAllServices()==1){//Si no hay problemas con servicios y el led esta encendido
@@ -97,6 +130,13 @@ public class Main {
         }
     }
      
+    /**
+     * Se verifica si se encuentra dentro de la franja horaria que se debe detectar movimiento. Se comprueba si la
+     * hora actual está dentro de los límites horarios establecidos en los parámetros.
+     * @param deviceController controlador de dispositivos mediante el cual se interactúa con los dispositivos.
+     * @param detectionTimeInit hora de inicio de la detección.
+     * @param detectionTimeFinalize hora de finalización de la detección.
+     */
     static public void verifyTimeMotionSensor(SIDeviceController deviceController,LocalTime detectionTimeInit,LocalTime detectionTimeFinalize){
        //Se obtiene la hora actual y se verificaa si esta en el rango horario de deteccion
      

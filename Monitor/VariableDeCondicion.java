@@ -24,7 +24,7 @@ public class VariableDeCondicion {
      */
     public VariableDeCondicion (Semaphore mutex){
         this.mutex=mutex;
-	micond= new Semaphore (0, true);
+	micond= new Semaphore (0,false);
 	bloqueados=0;
     }
 	
@@ -35,10 +35,12 @@ public class VariableDeCondicion {
 	bloqueados++;
 	mutex.release(); //Se libera el mutex del Monitor
 	try {
+            
             micond.acquire();
 	} 
 	catch (InterruptedException e) {
-            e.printStackTrace();
+           // e.printStackTrace();
+            e.getMessage();
             System.out.println("ERROR");
 	}
     }
