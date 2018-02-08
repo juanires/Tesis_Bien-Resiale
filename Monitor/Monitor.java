@@ -40,7 +40,7 @@ public class Monitor {
 
         try {
             Entrada.acquire(); //Toma la exclusion mutua del monitor
-
+           
             while(!Red.SolicitudDeDisparo(disparo)){
                 VCondicion[disparo].DELAY(); //La exclusion mutua del monitor se libera en la VCondicion
                 try{

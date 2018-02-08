@@ -35,11 +35,11 @@ public class VariableDeCondicion {
 	bloqueados++;
 	mutex.release(); //Se libera el mutex del Monitor
 	try {
-            
+           
             micond.acquire();
 	} 
 	catch (InterruptedException e) {
-           // e.printStackTrace();
+            e.printStackTrace();
             e.getMessage();
             System.out.println("ERROR");
 	}
