@@ -51,7 +51,7 @@ public class Main {
         
         
         //CREACION MONITOR
-        ProcesadorPetri proc = new ProcesadorPetri(29,30,"/home/pi/ProyectoIntegrador/MatrizIncidencia5.txt","/home/pi/ProyectoIntegrador/MatrizEstado5.txt");
+        ProcesadorPetri proc = new ProcesadorPetri(29,30,"/home/pi/ProyectoIntegrador/SoftwareAdministrador/Matrices/MatrizIncidencia.txt","/home/pi/ProyectoIntegrador/SoftwareAdministrador/Matrices/MatrizEstado.txt");
         Monitor monitor = new Monitor(proc);
 
         //CREACION DE CONTROLADORES
@@ -60,7 +60,7 @@ public class Main {
         SIServiceController serviceController = new ServiceController();
 
         //CREACION DE BASE DE DATOS
-        DataBase dataBase = DataBaseFactory.getDataBase("/home/pi/ProyectoIntegrador/DjangoProjects/tesis/db.sqlite3","sqlite3"); 
+        DataBase dataBase = DataBaseFactory.getDataBase("/home/pi/ProyectoIntegrador/Django/db.sqlite3","sqlite3"); 
         
         //CREACION DE FABRICAS
         DeviceFactory factoryGPIO = new GPIODeviceFactory();
