@@ -26,21 +26,34 @@ public class ReaderLastSnapshot {
      * @return path relativo de la última foto capturada.
      */
     public static String read(){
-          
+            
         try{
             // Se lanza el ejecutable.
             Process p;
             p = Runtime.getRuntime().exec("readlink " + ABSOLUTE_PATH + "lastsnap.jpg");
             // Se obtiene el stream de salida del programa
+            p.waitFor();
+            while(p.isAlive()){
+               try { Thread.currentThread().sleep(250);} 
+               catch (InterruptedException ex) {} 
+            }
             InputStream is = p.getInputStream();
             /* Se prepara un bufferedReader para poder leer la salida más comodamente. */
             BufferedReader br = new BufferedReader (new InputStreamReader (is));
             //Se lee la primera linea (que contiene el nombre de la foto) y se la concatena al path relativo.
-            return RELATIVE_PATH + br.readLine();
-            
+            String salida= RELATIVE_PATH + br.readLine();
+            br.close();
+            is.close();
+            p.destroyForcibly();
+            return salida;   
         }
         catch (IOException ex) {
             Logger.getLogger(ReaderLastSnapshot.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        } 
+        catch (InterruptedException ex) {
+            Logger.getLogger(ReaderLastSnapshot.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("ERROR2");
             return null;
         }
     }   

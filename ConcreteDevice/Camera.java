@@ -2,6 +2,10 @@ package ConcreteDevice;
 import Device.Device;
 import Readers.ReaderLastSnapshot;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
 
 
 /**
@@ -16,12 +20,13 @@ public class Camera extends Device implements Runnable {
     
     private Thread thread;
     private String lastSnapshot;
-    
+        
     /**
     * Crea un nuevo objeto Camera.
     */
     public Camera(){
         thread = null;
+        lastSnapshot = null;
     }
     
     /**
@@ -61,13 +66,24 @@ public class Camera extends Device implements Runnable {
     *
     */
     protected void takePicture(){
-        
+    
         try {
-            String cmd = "curl http://localhost:"+port+"/0/action/snapshot"; 
-            Runtime.getRuntime().exec(cmd); 
-        } 
+            String cmd = "curl http://localhost:"+port+"/0/action/snapshot";
+            Process p= Runtime.getRuntime().exec(cmd);
+            p.waitFor();
+            while(p.isAlive()){
+                try { Thread.currentThread().sleep(250);}
+                catch (InterruptedException ex) {
+                    System.out.println("ERROR1"); 
+                }
+            }
+            p.destroyForcibly();
+        }
         catch (IOException ioe) {
             System.out.println (ioe);
+        } 
+        catch (InterruptedException ex) {
+            Logger.getLogger(Camera.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -75,6 +91,7 @@ public class Camera extends Device implements Runnable {
     * No se implementa para objeto.
     * @return null.
     */
+    @Override
     public String getCode(){
         return null;
     }
@@ -83,6 +100,7 @@ public class Camera extends Device implements Runnable {
     * No se implementa para objeto.
     * @return 0.
     */
+    @Override
     public int getPinState(){
         return 0;
     }
@@ -100,12 +118,13 @@ public class Camera extends Device implements Runnable {
             if(isActive()){
                 //----------------ACCIONES QUE REALIZA EL HILO----------------------- 
                 monitor.disparar(transitions.get(0));
-                lastSnapshot = ReaderLastSnapshot.read();
+                lastSnapshot= ReaderLastSnapshot.read();
                 takePicture();
-                while(lastSnapshot.equals(ReaderLastSnapshot.read())){//Hasta que no se actualice el link simbolico no se dispara la proxima transicion
-                    try {Thread.sleep(1);} 
-                    catch (InterruptedException ex) {}
-                } 
+                while(lastSnapshot.equals(ReaderLastSnapshot.read())){
+                    takePicture();
+                    try { Thread.currentThread().sleep(300);} 
+                    catch (InterruptedException ex) {} 
+                }
                 monitor.disparar(transitions.get(1));
             }
         }

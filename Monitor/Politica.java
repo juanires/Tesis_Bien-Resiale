@@ -31,7 +31,7 @@ public class Politica {
      * Se adiciona el número identificador de una varibale de condición.
      * @param d número de una variable de condición.
      */
-    public void añadirElemento(int d){
+    public void aniadirElemento(int d){
         prioridad.add(d);
     }
 

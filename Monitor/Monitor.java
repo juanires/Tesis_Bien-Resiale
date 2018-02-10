@@ -28,7 +28,7 @@ public class Monitor {
 
         for(int i=0;i<Red.getTransiciones();i++){ //Una VCondicion por cada transicion de la red
             VCondicion[i] = new VariableDeCondicion(Entrada);
-            politica.añadirElemento(i); //Agregamos dentro del array los numeros de posiciones
+            politica.aniadirElemento(i); //Agregamos dentro del array los numeros de posiciones
         }
     }
 
