@@ -82,19 +82,8 @@ public class GpioOutputLock extends Device implements Runnable {
         while(true){
      //----------------ACCIONES QUE REALIZA EL HILO-----------------------
             if(isActive()){
-                
                 monitor.disparar(transitions.get(0));
-                pin.high();
-                
-                if(time == 0){ //Si no tiene tiempo asociado, debe ejecutar una transicion para apagarse
-                    monitor.disparar(transitions.get(1));
-                    pin.low();
-                }
-                else{//Si tiene tiempo asociado, despues de que éste transcurre se apaga.
-                    try {Thread.sleep(time*1000);} 
-                    catch (InterruptedException ex) {}
-                    pin.low();
-                }
+                open();
             }
         }
     }
@@ -104,5 +93,17 @@ public class GpioOutputLock extends Device implements Runnable {
     */
     public int getPinNumber(){
         return pinNumber;
+    }
+    
+    /**
+    * Abre la cerradura durante el lapso de tiempo especificado en el parámetro "time". 
+    */
+    public void open(){
+        pin.high();
+        //Si tiene tiempo asociado, despues de que éste transcurre se apaga.
+        try {Thread.sleep(time*1000);} 
+        catch (InterruptedException ex) {}
+        pin.low();
+        
     }
 }

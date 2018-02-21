@@ -60,7 +60,7 @@ public class Main {
         SIServiceController serviceController = new ServiceController();
 
         //CREACION DE BASE DE DATOS
-        DataBase dataBase = DataBaseFactory.getDataBase("/home/pi/ProyectoIntegrador/Django/db.sqlite3","sqlite3"); 
+        DataBase dataBase = DataBaseFactory.getDataBase("/home/pi/ProyectoIntegrador/tesis/db.sqlite3","sqlite3"); 
         
         //CREACION DE FABRICAS
         DeviceFactory factoryGPIO = new GPIODeviceFactory();

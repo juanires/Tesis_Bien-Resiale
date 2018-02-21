@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  */
 public class ReaderLastSnapshot {
        
-    private static final String ABSOLUTE_PATH ="/home/pi/ProyectoIntegrador/Django/events/static/events/images/";
+    private static final String ABSOLUTE_PATH ="/home/pi/ProyectoIntegrador/tesis/events/static/events/images/";
     private static final String RELATIVE_PATH ="/events/images/";
     
     /**

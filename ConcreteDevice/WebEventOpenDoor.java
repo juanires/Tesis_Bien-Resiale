@@ -117,7 +117,7 @@ public class WebEventOpenDoor extends Device implements Runnable {
          
                 try {
                     socket = serverSocket.accept(); //Espera una nueva conexion
-                    socket.setSoTimeout(10000); //Se espera recibir informacion durante 5 segundos
+                    socket.setSoTimeout(10000); //Se espera recibir informacion durante 10 segundos
                     dataInput = new BufferedReader(new InputStreamReader(socket.getInputStream()));//Se recibe informacion
                     String data = dataInput.readLine();
                     System.out.println(data);

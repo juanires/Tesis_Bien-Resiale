@@ -120,7 +120,7 @@ public class Camera extends Device implements Runnable {
                 monitor.disparar(transitions.get(0));
                 lastSnapshot= ReaderLastSnapshot.read();
                 takePicture();
-                while(lastSnapshot.equals(ReaderLastSnapshot.read())){
+                while(lastSnapshot.equals(ReaderLastSnapshot.read())){ //Este ciclo se hace sólo para comprobar que se ha capturado una nueva foto
                     takePicture();
                     try { Thread.currentThread().sleep(300);} 
                     catch (InterruptedException ex) {} 
