@@ -71,11 +71,19 @@ public abstract class DataBase {
     * que registran los distintos tipos de eventos.
     * @return ArrayList de tipo String que contiene el path de todas las fotos asociadas a los eventos borrados. 
     */
-    public abstract ArrayList deleteEvents(LocalDateTime date, ArrayList tablesOfEvents);
+    public abstract ArrayList deleteEvents(ArrayList tablesOfEvents);
     
     /**
      * Retorna una lista con los nombres de las tablas de la base de datos, que almacenan datos de eventos.
      * @return ArrayList de tipo String que contiene los nombres de las tablas de la base de datos, que almacenan datos de eventos.
      */
     public abstract ArrayList tablesList();
+    
+    /**
+     * Retorna true si la hora actual se encuentra dentro de la franja horaria de detección de movimiento, de lo contrario
+     * retorna false.
+     * @return true si la hora actual se encuentra dentro de la franja horaria de detección de movimiento, de lo contrario
+     * retorna false.
+    */
+    public abstract boolean movementSlotTime();    
 }

@@ -92,6 +92,7 @@ public class GpioListenerMovement extends Device {
                 // Acciones a realizar cuando se recibe un nivel alto
                 if(event.getState().toString().equals("LOW")){
                   //AQUI SE REALIZAN LOS DISPAROS DEL MONITOR
+                    
                     System.out.println( name + " LOW");
                     monitor.disparar(transitions.get(0));
                     monitor.disparar(transitions.get(1));

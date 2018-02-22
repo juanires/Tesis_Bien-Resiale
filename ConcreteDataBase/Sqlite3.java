@@ -7,8 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -145,7 +145,7 @@ public class Sqlite3 extends DataBase  {
     public int registeredUser(String code){
        
         int userId = -1;
-        String dayOfWeek = LocalDate.now().getDayOfWeek().toString().toLowerCase().concat("_id"); //Se obtiene el nombre del dia de la semana 
+        String dayOfWeek = LocalDate.now((ZoneId.of("UTC-3"))).getDayOfWeek().toString().toLowerCase().concat("_id"); //Se obtiene el nombre del dia de la semana 
        //Como en la tabla estos campos son claves foraneas y por esto Django le agrega "_id", tambien se lo agrega para que coincida con el nombre del campo
         
         connect();
@@ -174,26 +174,35 @@ public class Sqlite3 extends DataBase  {
     }
     
     @Override
-    public ArrayList deleteEvents(LocalDateTime date, ArrayList tablesOfEvents){
-        ArrayList <String> imagesOfEventsToBeDeleted = new ArrayList();
-        String limitDate = date.toLocalDate().toString().concat(" "+date.toLocalTime().toString());
-        int count = 0;
-        connect();
-       
-        while(count < tablesOfEvents.size()){//Se consultan todas las tablas de eventos
-            ResultSet result = consult("SELECT id,image FROM "+tablesOfEvents.get(count) +" WHERE date_time <'"+limitDate+"'" );
-            if(result!=null){
-                try {
-                    while(result.next()) { //Mietras hayan filas a eliminar
-                        imagesOfEventsToBeDeleted.add(result.getString("image"));
-                        delete("DELETE FROM "+tablesOfEvents.get(count)+" WHERE id = "+result.getInt("id"));
+    public ArrayList deleteEvents(ArrayList tablesOfEvents){
+        ArrayList <String> imagesOfEventsToBeDeleted = new ArrayList(); //Aqui se guardarán el listado de los nombres de las fotos a borrar
+        int count = 0; //Contador para almacenar el número de tablas de eventos que se procesaron
+        connect(); //Se conecta a la base de datos
+        String limitDate;
+        //Se consulta desde la tabla correspondiente, el tiempo máximo que se almacenan los eventos
+        ResultSet result = consult("SELECT year, month FROM events_eventsduration WHERE id='1'");
+        if(result!=null){
+            try {
+                result.next();
+                //A la fecha actual se le resta la cantidad de años y meses establecidos en la tabla de la base de datos
+                limitDate = LocalDate.now().minusYears(result.getInt("year")).minusMonths(result.getInt("month")).toString();
+        
+                while(count < tablesOfEvents.size()){//Se consultan todas las tablas de eventos
+                    result = consult("SELECT id,image FROM "+tablesOfEvents.get(count) +" WHERE date_time <'"+limitDate+"'" );
+                    if(result!=null){
+                        while(result.next()) { //Mietras hayan filas a eliminar
+                            imagesOfEventsToBeDeleted.add(result.getString("image"));
+                            delete("DELETE FROM "+tablesOfEvents.get(count)+" WHERE id = "+result.getInt("id"));
+                        }
                     }
-                } 
-                catch (SQLException ex) {
-                    //Logger.getLogger(Sqlite3.class.getName()).log(Level.SEVERE, null, ex);
+                    count ++;
                 }
             }
-            count ++;
+            catch (SQLException ex) {
+               Logger.getLogger(Sqlite3.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                
+               
         }
         disconnect();
         return imagesOfEventsToBeDeleted;
@@ -211,10 +220,37 @@ public class Sqlite3 extends DataBase  {
                 }
             } 
             catch (SQLException ex) {
-                Logger.getLogger(Sqlite3.class.getName()).log(Level.SEVERE, null, ex);
+                //Logger.getLogger(Sqlite3.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         disconnect();
         return tables;
     }
+    
+    @Override
+    public boolean movementSlotTime(){
+        
+        boolean response = false; 
+        connect();
+        ResultSet result = consult("SELECT begin, end FROM events_movementtimezone as timeZone WHERE timeZone.id='1'");
+        if(result!=null){
+            try {
+                result.next();
+                //Si NO es administrador, se verifica la franja horaria
+                LocalTime begin = LocalTime.parse(result.getString("begin"), DateTimeFormatter.ISO_LOCAL_TIME);
+                LocalTime end = LocalTime.parse(result.getString("end"), DateTimeFormatter.ISO_LOCAL_TIME);
+                if(ReaderTime.isTimeSlot(begin, end)){
+                   response = true;
+                }
+            } 
+            catch (SQLException ex) {
+                //Logger.getLogger(ConcreteDataBase.Sqlite3.class.getName()).log(Level.SEVERE, null, ex);
+                response = false;
+            }
+        }
+        disconnect();
+        return response;
+    }
+    
+    
 }

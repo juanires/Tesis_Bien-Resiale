@@ -51,7 +51,7 @@ public class Main {
         
         
         //CREACION MONITOR
-        ProcesadorPetri proc = new ProcesadorPetri(29,30,"/home/pi/ProyectoIntegrador/SoftwareAdministrador/Matrices/MatrizIncidencia.txt","/home/pi/ProyectoIntegrador/SoftwareAdministrador/Matrices/MatrizEstado.txt");
+        ProcesadorPetri proc = new ProcesadorPetri(31,31,"/home/pi/ProyectoIntegrador/SoftwareAdministrador/Matrices/MatrizIncidencia6.txt","/home/pi/ProyectoIntegrador/SoftwareAdministrador/Matrices/MatrizEstado6.txt");
         Monitor monitor = new Monitor(proc);
 
         //CREACION DE CONTROLADORES
@@ -86,7 +86,7 @@ public class Main {
         deviceController.addDevice(factoryWebEvent.implementsDevice(dataBase, monitor, Arrays.asList(22,15,13), "WebOpenDoor", 50000, deviceController.getDevice("readerCode"), "WebEventOpenDoor"));
 
         //CREACION E INICIALIZACION DEL UPDATER(ACTUALIZADOR DE BASE DE DATOS)
-        DataBaseUpdater dataBaseUpdater = new DataBaseUpdater(dataBase);
+        DataBaseUpdater dataBaseUpdater = new DataBaseUpdater(dataBase,monitor,Arrays.asList(29,30));
             
         //SE DISPARAN LAS TRANSICIONES QUE HABILITAN LOS DISPOSITIVOS
         monitor.disparar(20);//SE INICIA EL PROGRAMA
@@ -97,10 +97,10 @@ public class Main {
             
             //COMPROBACION DEL FUNCIONAMIENTO DE SERVICIOS
             verifyServices(monitor,serviceController,deviceController);
-            
+             monitor.disparar(29);
             //COMPROBACION DEL HORARIO EN QUE SE DETECTA MOVIMIENTO
-            verifyTimeMotionSensor(deviceController, DETECTION_TIME_INIT_MOTION_SENSOR, DETECTION_TIME_FINALIZE_MOTION_SENSOR);
-            
+            verifyTimeMotionSensor(dataBase,deviceController, DETECTION_TIME_INIT_MOTION_SENSOR, DETECTION_TIME_FINALIZE_MOTION_SENSOR);
+            monitor.disparar(30);
             try {Thread.sleep(10000);} 
             catch (InterruptedException ex) {}
         }
@@ -137,10 +137,9 @@ public class Main {
      * @param detectionTimeInit hora de inicio de la detección.
      * @param detectionTimeFinalize hora de finalización de la detección.
      */
-    static public void verifyTimeMotionSensor(SIDeviceController deviceController,LocalTime detectionTimeInit,LocalTime detectionTimeFinalize){
+    static public void verifyTimeMotionSensor(DataBase db,SIDeviceController deviceController,LocalTime detectionTimeInit,LocalTime detectionTimeFinalize){
        //Se obtiene la hora actual y se verificaa si esta en el rango horario de deteccion
-     
-       if(ReaderTime.isTimeSlot(detectionTimeInit, detectionTimeFinalize)){
+      if(db.movementSlotTime()){
             if(!deviceController.getDevice("movement").isActive()){ //Si el dispositivo no esta activo
                 deviceController.getDevice("movement").setActive(true); //Se activa
             }
@@ -150,5 +149,20 @@ public class Main {
                 deviceController.getDevice("movement").setActive(false); //Se desactiva
             }
         }
+      
+       
+       
+       
+      /* 
+       if(ReaderTime.isTimeSlot(detectionTimeInit, detectionTimeFinalize)){
+            if(!deviceController.getDevice("movement").isActive()){ //Si el dispositivo no esta activo
+                deviceController.getDevice("movement").setActive(true); //Se activa
+            }
+        }
+        else{ //Si no se esta en el rango de deteccion
+            if(deviceController.getDevice("movement").isActive()){  //Si esta activado
+                deviceController.getDevice("movement").setActive(false); //Se desactiva
+            }
+        }*/
     }
 }
