@@ -32,7 +32,6 @@ public class DataBaseUpdater implements Runnable {
         this.monitor = monitor;
         this.transitions = transitions;
         tablesOfEvents = new ArrayList();
-        loadTableName();
         thread.start();
     }
     
@@ -46,6 +45,7 @@ public class DataBaseUpdater implements Runnable {
             try {Thread.sleep(86400000);} //La actualizacion se hace una vez por dia 
             catch (InterruptedException ex){}
             monitor.disparar(transitions.get(0));
+            loadTableName();
             usersUpdate();
             deleteEvents();
             monitor.disparar(transitions.get(1));

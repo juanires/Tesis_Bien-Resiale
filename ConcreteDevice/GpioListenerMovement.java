@@ -17,8 +17,9 @@ import com.pi4j.io.gpio.event.GpioPinListenerDigital;
  * @author Bien Christopher - Resiale Juan.
  * 2018 - Córdoba, Argentina. 
  */
-public class GpioListenerMovement extends Device {
+public class GpioListenerMovement extends Device  implements Runnable {
     
+    private Thread thread;
     private GpioPinDigitalInput myButton;
     private GpioPinListenerDigital listener;
     private Pin pin;
@@ -27,7 +28,7 @@ public class GpioListenerMovement extends Device {
     * Crea un nuevo objeto GpioListenerMovement.
     */
     public GpioListenerMovement(){
-       
+        thread = null;
         myButton = null;
         listener = null;
     }
@@ -53,6 +54,10 @@ public class GpioListenerMovement extends Device {
         configure();
         activeListener();
         setActive(true);
+        if(thread == null) {
+            thread = new Thread(this);
+            thread.start();
+        }
     }
 
     /**
@@ -74,9 +79,34 @@ public class GpioListenerMovement extends Device {
     * No se implementa para objeto.
     * @return null.
     */   
+    @Override
     public String getCode(){
         return null;
     }
+    
+    @Override
+    public void run() {
+        
+        while(true){
+            
+            monitor.disparar(29); //Se consulta  la base de datos
+            if(dataBase.movementSlotTime()){
+                monitor.disparar(30); //Se libera la base de datos
+                if(!isActive()){ //Si el dispositivo no esta activo
+                    setActive(true); //Se activa
+                }
+            }
+            else{//Si no se esta en el rango de deteccion
+                monitor.disparar(30); //Se libera la base de datos
+                if(isActive()){  //Si esta activado
+                    setActive(false); //Se desactiva
+                }
+            }
+            try { Thread.currentThread().sleep(time*1000);}
+            catch (InterruptedException ex) {System.out.println("ERROR1");}
+        }
+    }
+        
     
     /**
     * Se activa el listener. Dentro del cuerpo de éste método se crea un nuevo objeto "GpioPinListenerDigital" y se sobreescribe
@@ -120,4 +150,6 @@ public class GpioListenerMovement extends Device {
     public int getPinState(){
         return 0;
     }
+
+    
 }

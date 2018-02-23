@@ -73,7 +73,7 @@ public class Main {
         serviceController.addService(ServiceFactory.getService("motion"));
                 
         //CREACION DE DISPOSITIVOS
-        deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, monitor, Arrays.asList(26,15,21), "movement", gpio, 4,0 ,"GpioListenerMovement"));
+        deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, monitor, Arrays.asList(26,15,21), "movement", gpio, 4,1800 ,"GpioListenerMovement"));
         deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, monitor, Arrays.asList(26,15,18,25), "button", gpio, 5,0, "GpioListenerButton"));
         deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, monitor, Arrays.asList(9), "bell", gpio, 3,3, "GpioOutputBell"));
         deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, monitor, Arrays.asList(2), "door", gpio, 2,1, "GpioOutputLock"));
@@ -97,10 +97,6 @@ public class Main {
             
             //COMPROBACION DEL FUNCIONAMIENTO DE SERVICIOS
             verifyServices(monitor,serviceController,deviceController);
-             monitor.disparar(29);
-            //COMPROBACION DEL HORARIO EN QUE SE DETECTA MOVIMIENTO
-            verifyTimeMotionSensor(dataBase,deviceController, DETECTION_TIME_INIT_MOTION_SENSOR, DETECTION_TIME_FINALIZE_MOTION_SENSOR);
-            monitor.disparar(30);
             try {Thread.sleep(10000);} 
             catch (InterruptedException ex) {}
         }
@@ -128,41 +124,5 @@ public class Main {
                 serviceController.restartDroppedService(); //Se reinician los servicios caidos
             }
         }
-    }
-     
-    /**
-     * Se verifica si se encuentra dentro de la franja horaria que se debe detectar movimiento. Se comprueba si la
-     * hora actual está dentro de los límites horarios establecidos en los parámetros.
-     * @param deviceController controlador de dispositivos mediante el cual se interactúa con los dispositivos.
-     * @param detectionTimeInit hora de inicio de la detección.
-     * @param detectionTimeFinalize hora de finalización de la detección.
-     */
-    static public void verifyTimeMotionSensor(DataBase db,SIDeviceController deviceController,LocalTime detectionTimeInit,LocalTime detectionTimeFinalize){
-       //Se obtiene la hora actual y se verificaa si esta en el rango horario de deteccion
-      if(db.movementSlotTime()){
-            if(!deviceController.getDevice("movement").isActive()){ //Si el dispositivo no esta activo
-                deviceController.getDevice("movement").setActive(true); //Se activa
-            }
-        }
-        else{ //Si no se esta en el rango de deteccion
-            if(deviceController.getDevice("movement").isActive()){  //Si esta activado
-                deviceController.getDevice("movement").setActive(false); //Se desactiva
-            }
-        }
-      
-       
-       
-       
-      /* 
-       if(ReaderTime.isTimeSlot(detectionTimeInit, detectionTimeFinalize)){
-            if(!deviceController.getDevice("movement").isActive()){ //Si el dispositivo no esta activo
-                deviceController.getDevice("movement").setActive(true); //Se activa
-            }
-        }
-        else{ //Si no se esta en el rango de deteccion
-            if(deviceController.getDevice("movement").isActive()){  //Si esta activado
-                deviceController.getDevice("movement").setActive(false); //Se desactiva
-            }
-        }*/
     }
 }
