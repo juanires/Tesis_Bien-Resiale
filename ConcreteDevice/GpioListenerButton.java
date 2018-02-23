@@ -1,5 +1,5 @@
 package ConcreteDevice;
-import Readers.ReaderLastSnapshot;
+import Readers.ReaderSnapshot;
 import Readers.ReaderDate;
 import Device.Device;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
@@ -104,7 +104,7 @@ public class GpioListenerButton extends Device {
                     monitor.disparar(transitions.get(0));
                     monitor.disparar(transitions.get(1));
                     //Ahora se guarda en base de datos
-                    dataBase.insert("insert into events_" + name + " (date_time,image) values ('"+ReaderDate.read()+"','"+ReaderLastSnapshot.read()+"')");
+                    dataBase.insertEventButton();
                     //Se retornan reccursos
                     monitor.disparar(transitions.get(2));
                     monitor.disparar(transitions.get(3));

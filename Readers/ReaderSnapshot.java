@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  * @author Bien Christopher - Resiale Juan.
  * 2018 - Córdoba, Argentina. 
  */
-public class ReaderLastSnapshot {
+public class ReaderSnapshot {
        
     private static final String ABSOLUTE_PATH ="/home/pi/ProyectoIntegrador/tesis/events/static/events/images/";
     private static final String RELATIVE_PATH ="/events/images/";
@@ -25,7 +25,7 @@ public class ReaderLastSnapshot {
      * en el programa Django.
      * @return path relativo de la última foto capturada.
      */
-    public static String read(){
+    public static String readLastSnapshoot(){
             
         try{
             // Se lanza el ejecutable.
@@ -48,13 +48,22 @@ public class ReaderLastSnapshot {
             return salida;   
         }
         catch (IOException ex) {
-            Logger.getLogger(ReaderLastSnapshot.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ReaderSnapshot.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         } 
         catch (InterruptedException ex) {
-            Logger.getLogger(ReaderLastSnapshot.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ReaderSnapshot.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("ERROR2");
             return null;
         }
-    }   
+    }
+    
+    public static String getAbsolutePath(){
+        return ABSOLUTE_PATH;
+    }
+    
+    public static String getRelativePath(){
+        return RELATIVE_PATH;
+    }
+    
 }

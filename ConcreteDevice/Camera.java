@@ -1,6 +1,6 @@
 package ConcreteDevice;
 import Device.Device;
-import Readers.ReaderLastSnapshot;
+import Readers.ReaderSnapshot;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -118,9 +118,9 @@ public class Camera extends Device implements Runnable {
             if(isActive()){
                 //----------------ACCIONES QUE REALIZA EL HILO----------------------- 
                 monitor.disparar(transitions.get(0));
-                lastSnapshot= ReaderLastSnapshot.read();
+                lastSnapshot= ReaderSnapshot.readLastSnapshoot();
                 takePicture();
-                while(lastSnapshot.equals(ReaderLastSnapshot.read())){ //Este ciclo se hace sólo para comprobar que se ha capturado una nueva foto
+                while(lastSnapshot.equals(ReaderSnapshot.readLastSnapshoot())){ //Este ciclo se hace sólo para comprobar que se ha capturado una nueva foto
                     takePicture();
                     try { Thread.currentThread().sleep(300);} 
                     catch (InterruptedException ex) {} 

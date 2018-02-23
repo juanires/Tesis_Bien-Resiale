@@ -1,7 +1,7 @@
 package ConcreteDevice;
 import Device.Device;
 import Readers.ReaderDate;
-import Readers.ReaderLastSnapshot;
+import Readers.ReaderSnapshot;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -124,7 +124,7 @@ public class WebEventOpenDoor extends Device implements Runnable {
                     //Se disparan recien aqui las transiciones para evitar inconvenientes en caso de TimeOut
                     monitor.disparar(transitions.get(0));
                     monitor.disparar(transitions.get(1));//Se guarda en base de datos
-                    dataBase.insert("insert into events_" + name.toLowerCase() + "(date_time,user_id,image)  values ('"+ReaderDate.read()+"',"+Integer.parseInt(data)+",'"+ReaderLastSnapshot.read()+"')");
+                    dataBase.insertEventWeb(data);
                     monitor.disparar(transitions.get(2));
                 } 
                 catch (SocketTimeoutException ex) { //En caso que haya expirado el TimeOut tengo que 

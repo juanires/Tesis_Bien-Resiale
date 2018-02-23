@@ -40,7 +40,7 @@ import java.util.Arrays;
 public class Main {
     /**
      * Ejecuta el programa principal.
-     * @param args 
+     * @param args Argumentos. El programa no tiene en cuenta los argumentos.
      */
     public static void main(String[] args) {
             

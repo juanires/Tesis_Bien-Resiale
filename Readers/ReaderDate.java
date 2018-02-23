@@ -17,7 +17,5 @@ public class ReaderDate {
     public static String read(){
         
        return LocalDateTime.now(ZoneId.of("UTC")).toString();
-        //return LocalDateTime.now().toString();
     }
-    
 }

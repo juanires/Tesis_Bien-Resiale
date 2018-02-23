@@ -1,5 +1,5 @@
 package ConcreteDevice;
-import Readers.ReaderLastSnapshot;
+import Readers.ReaderSnapshot;
 import Readers.ReaderDate;
 import Device.Device;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
@@ -92,12 +92,11 @@ public class GpioListenerMovement extends Device {
                 // Acciones a realizar cuando se recibe un nivel alto
                 if(event.getState().toString().equals("LOW")){
                   //AQUI SE REALIZAN LOS DISPAROS DEL MONITOR
-                    
                     System.out.println( name + " LOW");
                     monitor.disparar(transitions.get(0));
                     monitor.disparar(transitions.get(1));
                     //Ahora se guarda en base de datos
-                    dataBase.insert("insert into events_" + name + " (date_time,image) values ('"+ReaderDate.read()+"','"+ReaderLastSnapshot.read()+"')");
+                    dataBase.insertEventMovement();
                     //Se retornan reccursos
                     monitor.disparar(transitions.get(2));
                 }

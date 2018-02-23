@@ -1,5 +1,5 @@
 package Updaters;
-import Readers.ReaderLastSnapshot;
+import Readers.ReaderSnapshot;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -14,8 +14,8 @@ import java.util.logging.Logger;
  */
 public class ImagesDelete {
   
-    private static final String ABSOLUTE_PATH ="/home/pi/ProyectoIntegrador/tesis/events/static/events/images/";
-    private static final String RELATIVE_PATH ="/events/images/";
+    private static final String ABSOLUTE_PATH =ReaderSnapshot.getAbsolutePath();
+    private static final String RELATIVE_PATH =ReaderSnapshot.getRelativePath();
     
     /**
      * Borra la lista de imágenes que se pasa como parámetro.  
@@ -30,7 +30,7 @@ public class ImagesDelete {
                 Runtime.getRuntime().exec(cmd).waitFor(); 
             }
             catch (IOException ex) {
-                Logger.getLogger(ReaderLastSnapshot.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ReaderSnapshot.class.getName()).log(Level.SEVERE, null, ex);
             } catch (InterruptedException ex) {
                 Logger.getLogger(ImagesDelete.class.getName()).log(Level.SEVERE, null, ex);
             }

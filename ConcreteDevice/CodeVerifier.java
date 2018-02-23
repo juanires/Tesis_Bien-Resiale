@@ -1,7 +1,7 @@
 package ConcreteDevice;
 import Device.Device;
 import Readers.ReaderDate;
-import Readers.ReaderLastSnapshot;
+import Readers.ReaderSnapshot;
 
 /**
  * Esta clase se encarga de verificar el código leído por el lector y actuar en consecuencia. 
@@ -87,15 +87,14 @@ public class CodeVerifier extends Device implements Runnable{
                 if(userId > 0){
                     monitor.disparar(transitions.get(1));
                     monitor.disparar(transitions.get(2));
-                    dataBase.insert("insert into events_permittedaccess (date_time,user_id,image) " + "values ('"+ReaderDate.read()+"',"+ userId +",'"+ReaderLastSnapshot.read()+"')");
-                    userId = -1;
+                    dataBase.insertEventPermittedAccess(userId,true);
                     monitor.disparar(transitions.get(3)); //Se retornan los recursos
                 }
                 else{
                     userId = -1;
                     monitor.disparar(transitions.get(4));
                     monitor.disparar(transitions.get(5));
-                    dataBase.insert("insert into events_deniedaccess " + " (date_time,image)values ('"+ReaderDate.read()+"','"+ReaderLastSnapshot.read()+"')");
+                    dataBase.insertEventPermittedAccess(userId,false);
                     monitor.disparar(transitions.get(6));
                 }
             }

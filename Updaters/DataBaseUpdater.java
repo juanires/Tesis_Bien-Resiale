@@ -2,6 +2,7 @@ package Updaters;
 import DataBase.DataBase;
 import Monitor.Monitor;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +56,7 @@ public class DataBaseUpdater implements Runnable {
      * Se da de baja un usuario si ya ha transcurrido su fecha de expiración.
     */
     public void usersUpdate(){
-        database.update("UPDATE users_user SET is_active = 0 WHERE is_staff = 0 and expiration_date <'"+LocalDate.now().toString()+"'");
+        database.usersUpdate(LocalDate.now((ZoneId.of("UTC-3"))).toString());
     }
     
     /**

@@ -66,7 +66,6 @@ public abstract class DataBase {
 
     /**
     * Eliminar eventos de la base de datos. 
-    * @param date fecha a partir de la cual se borran los eventos.
     * @param tablesOfEvents ArrayList de String que contiene el nombre de las tablas de la base de datos
     * que registran los distintos tipos de eventos.
     * @return ArrayList de tipo String que contiene el path de todas las fotos asociadas a los eventos borrados. 
@@ -86,4 +85,42 @@ public abstract class DataBase {
      * retorna false.
     */
     public abstract boolean movementSlotTime();    
+    
+    /**
+     * Se da de baja un usuario si ya ha transcurrido su fecha de expiración.
+     * 
+     * @param date fecha de expiración del usuario
+    */
+    public abstract void usersUpdate(String date);
+    
+    /**
+     * Se inserta un nuevo evento en la tabla correspondiente a los accesos permitidos o 
+     * denegados dependiendo el parametro "permitted". Si su valor es true entonces se ha consedido
+     * el acceso y se registra el evento en la tabla correspondiente a los accesos permitidos.
+     * Si el parámetro es false, se registra el evento en la tabla de accesos denegados.
+     * 
+     * @param UserId identificación del ususario que desea acceder
+     * @param permitted determina si el acceso ha sido permitido
+    */
+    public abstract void insertEventPermittedAccess(int UserId, boolean permitted);
+    
+    /**
+     * Se inserta un nuevo evento en la tabla que registra las detecciones de movimiento. Esta función registra
+     * los eventos de un detector de movimiento; si en un futuro se adicionaran más sensores de movimiento al
+     * sistema, se le debería pasar como parámetro a esta función un identificador del sensor 
+     * para determinar en que tabla se registra el evento.
+     * 
+    */
+    public abstract void insertEventMovement();
+    
+    /**
+    * Se inserta un nuevo evento en la tabla que registra los toques de timbre.
+    */
+    public abstract void insertEventButton();
+    
+    /**
+    * Se inserta un nuevo evento en la tabla que registra la apertura de puerta vía  web.
+     * @param data identificador del usuario que abre la puerta desde la web.
+    */
+    public abstract void insertEventWeb(String data);
 }

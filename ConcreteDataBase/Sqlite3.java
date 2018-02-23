@@ -1,5 +1,7 @@
 package ConcreteDataBase;
 import DataBase.DataBase;
+import Readers.ReaderDate;
+import Readers.ReaderSnapshot;
 import Readers.ReaderTime;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -201,8 +203,6 @@ public class Sqlite3 extends DataBase  {
             catch (SQLException ex) {
                Logger.getLogger(Sqlite3.class.getName()).log(Level.SEVERE, null, ex);
             }
-                
-               
         }
         disconnect();
         return imagesOfEventsToBeDeleted;
@@ -252,5 +252,33 @@ public class Sqlite3 extends DataBase  {
         return response;
     }
     
+    @Override
+    public void usersUpdate(String date){
+        update("UPDATE users_user SET is_active = 0 WHERE is_staff = 0 and expiration_date <'"+date+"'"); 
+    }
     
+    @Override
+    public void insertEventPermittedAccess(int UserId, boolean permitted){
+        if(permitted){
+           insert("insert into events_permittedaccess (date_time,user_id,image) " + "values ('"+ReaderDate.read()+"',"+ UserId +",'"+ReaderSnapshot.readLastSnapshoot()+"')");
+        }
+        else {
+           insert("insert into events_deniedaccess " + " (date_time,image)values ('"+ReaderDate.read()+"','"+ReaderSnapshot.readLastSnapshoot()+"')");
+        }
+    }
+
+    @Override
+    public void insertEventMovement(){
+        insert("insert into events_movement (date_time,image) values ('"+ReaderDate.read()+"','"+ReaderSnapshot.readLastSnapshoot()+"')");
+    }
+    
+    @Override
+    public void insertEventButton(){
+        insert("insert into events_button (date_time,image) values ('"+ReaderDate.read()+"','"+ReaderSnapshot.readLastSnapshoot()+"')");
+    }
+    
+    @Override
+    public void insertEventWeb(String data){
+        insert("insert into events_webopendoor (date_time,user_id,image)  values ('"+ReaderDate.read()+"',"+Integer.parseInt(data)+",'"+ReaderSnapshot.readLastSnapshoot()+"')");
+    }
 }
