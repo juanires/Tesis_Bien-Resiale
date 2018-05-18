@@ -30,7 +30,7 @@ public class GpioOutputLock extends Device implements Runnable {
     */
     @Override
     protected void configure() {
-       pin = gpio.provisionDigitalOutputPin(RaspiPin.getPinByAddress(pinNumber),PinState.LOW);
+       pin = gpio.provisionDigitalOutputPin(RaspiPin.getPinByAddress(pinNumber),PinState.HIGH);
        pin.setShutdownOptions(true, PinState.LOW);
     }
 
@@ -99,11 +99,11 @@ public class GpioOutputLock extends Device implements Runnable {
     * Abre la cerradura durante el lapso de tiempo especificado en el parámetro "time". 
     */
     public void open(){
-        pin.high();
+        pin.low();
         //Si tiene tiempo asociado, despues de que éste transcurre se apaga.
         try {Thread.sleep(time*1000);} 
         catch (InterruptedException ex) {}
-        pin.low();
+        pin.high();
         
     }
 }

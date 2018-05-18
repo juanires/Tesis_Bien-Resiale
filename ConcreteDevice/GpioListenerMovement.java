@@ -1,6 +1,4 @@
 package ConcreteDevice;
-import Readers.ReaderSnapshot;
-import Readers.ReaderDate;
 import Device.Device;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.Pin;
@@ -89,15 +87,15 @@ public class GpioListenerMovement extends Device  implements Runnable {
         
         while(true){
             
-            monitor.disparar(29); //Se consulta  la base de datos
+            monitor.disparar(transitions.get(3)); //Se consulta  la base de datos
             if(dataBase.movementSlotTime()){
-                monitor.disparar(30); //Se libera la base de datos
+                monitor.disparar(transitions.get(4)); //Se libera la base de datos
                 if(!isActive()){ //Si el dispositivo no esta activo
                     setActive(true); //Se activa
                 }
             }
             else{//Si no se esta en el rango de deteccion
-                monitor.disparar(30); //Se libera la base de datos
+                monitor.disparar(transitions.get(4)); //Se libera la base de datos
                 if(isActive()){  //Si esta activado
                     setActive(false); //Se desactiva
                 }

@@ -73,10 +73,10 @@ public class Main {
         serviceController.addService(ServiceFactory.getService("motion"));
                 
         //CREACION DE DISPOSITIVOS
-        deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, monitor, Arrays.asList(26,15,21), "movement", gpio, 4,1800 ,"GpioListenerMovement"));
+        deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, monitor, Arrays.asList(26,15,21,29,30), "movement", gpio, 4,1800 ,"GpioListenerMovement"));
         deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, monitor, Arrays.asList(26,15,18,25), "button", gpio, 5,0, "GpioListenerButton"));
         deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, monitor, Arrays.asList(9), "bell", gpio, 3,3, "GpioOutputBell"));
-        deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, monitor, Arrays.asList(2), "door", gpio, 2,1, "GpioOutputLock"));
+        deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, monitor, Arrays.asList(2), "door", gpio, 2,3, "GpioOutputLock"));
         deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, monitor, Arrays.asList(11,4), "GreeLed", gpio, 12,0, "GpioOutputLed"));
         deviceController.addDevice(factoryGPIO.implementsDevice(dataBase, monitor, Arrays.asList(10,3), "YellowLed", gpio, 13,0, "GpioOutputLed"));
         deviceController.addDevice(factoryCamera.implementsDevice(dataBase, monitor, Arrays.asList(5,16), "Camera", 8080 ,"Camera"));
