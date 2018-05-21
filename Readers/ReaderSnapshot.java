@@ -34,7 +34,7 @@ public class ReaderSnapshot {
             // Se obtiene el stream de salida del programa
             p.waitFor();
             while(p.isAlive()){
-               try { Thread.currentThread().sleep(250);} 
+               try { Thread.currentThread().sleep(50);} 
                catch (InterruptedException ex) {} 
             }
             InputStream is = p.getInputStream();

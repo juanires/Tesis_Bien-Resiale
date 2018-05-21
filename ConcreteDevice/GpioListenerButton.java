@@ -1,6 +1,4 @@
 package ConcreteDevice;
-import Readers.ReaderSnapshot;
-import Readers.ReaderDate;
 import Device.Device;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.Pin;
@@ -40,7 +38,7 @@ public class GpioListenerButton extends Device {
         pin = RaspiPin.getPinByAddress(pinNumber);
         myButton = gpio.provisionDigitalInputPin(pin, PinPullResistance.PULL_DOWN);
         myButton.setShutdownOptions(true);
-        myButton.setDebounce(1000); //Para evitar rebotes
+        myButton.setDebounce(500); //Para evitar rebotes
     }
 
     /**

@@ -88,34 +88,34 @@ public class Sqlite3 extends DataBase  {
     
     @Override
     public int insert(String sqlStatement){
-      connect();
+      //connect();
         try {
             PreparedStatement st = connect.prepareStatement(sqlStatement);
             st.execute();
         } 
         catch (SQLException ex) {
             System.err.println(ex.getMessage());
-            disconnect();
+           // disconnect();
             return 0;
         }
-        disconnect();
+       // disconnect();
         return 1;
     }
     
     @Override
     public int update(String sqlStatement){
         
-        connect();
+       // connect();
         try {
             PreparedStatement st = connect.prepareStatement(sqlStatement);
             st.execute();
         } 
         catch (SQLException ex) {
             System.err.println(ex.getMessage());
-            disconnect();
+            //disconnect();
             return 0;
         }
-        disconnect();
+       // disconnect();
         return 1;
     }
     
@@ -127,7 +127,7 @@ public class Sqlite3 extends DataBase  {
         } 
         catch (SQLException ex) {
             System.err.println(ex.getMessage());
-            disconnect();
+           // disconnect();
             return 0;
         }
         return 1;
@@ -150,7 +150,7 @@ public class Sqlite3 extends DataBase  {
         String dayOfWeek = LocalDate.now((ZoneId.of("UTC-3"))).getDayOfWeek().toString().toLowerCase().concat("_id"); //Se obtiene el nombre del dia de la semana 
        //Como en la tabla estos campos son claves foraneas y por esto Django le agrega "_id", tambien se lo agrega para que coincida con el nombre del campo
         
-        connect();
+       // connect();
         ResultSet result = consult("SELECT user.id, is_staff, begin, end FROM users_user as user, users_timezone as time WHERE user.code='"+code+"' and user.is_active = 1 and "+dayOfWeek+"= time.id");
         if(result!=null){
             try {
@@ -171,7 +171,7 @@ public class Sqlite3 extends DataBase  {
                 userId = -1;
             }
         }
-        disconnect();
+        //disconnect();
         return userId;
     }
     
@@ -179,7 +179,7 @@ public class Sqlite3 extends DataBase  {
     public ArrayList deleteEvents(ArrayList tablesOfEvents){
         ArrayList <String> imagesOfEventsToBeDeleted = new ArrayList(); //Aqui se guardarán el listado de los nombres de las fotos a borrar
         int count = 0; //Contador para almacenar el número de tablas de eventos que se procesaron
-        connect(); //Se conecta a la base de datos
+        //connect(); //Se conecta a la base de datos
         String limitDate;
         //Se consulta desde la tabla correspondiente, el tiempo máximo que se almacenan los eventos
         ResultSet result = consult("SELECT year, month FROM events_eventsduration WHERE id='1'");
@@ -204,14 +204,14 @@ public class Sqlite3 extends DataBase  {
                Logger.getLogger(Sqlite3.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        disconnect();
+        //disconnect();
         return imagesOfEventsToBeDeleted;
     }
     
     @Override
     public ArrayList tablesList(){
         ArrayList<String> tables = new ArrayList();
-        connect();
+        //connect();
         ResultSet result = consult("SELECT name FROM sqlite_master WHERE type='table'" );
         if(result!=null){
             try {
@@ -223,7 +223,7 @@ public class Sqlite3 extends DataBase  {
                 //Logger.getLogger(Sqlite3.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        disconnect();
+        //disconnect();
         return tables;
     }
     
@@ -231,7 +231,7 @@ public class Sqlite3 extends DataBase  {
     public boolean movementSlotTime(){
         
         boolean response = false; 
-        connect();
+        //connect();
         ResultSet result = consult("SELECT begin, end FROM events_movementtimezone as timeZone WHERE timeZone.id='1'");
         if(result!=null){
             try {
@@ -248,7 +248,7 @@ public class Sqlite3 extends DataBase  {
                 response = false;
             }
         }
-        disconnect();
+        //disconnect();
         return response;
     }
     

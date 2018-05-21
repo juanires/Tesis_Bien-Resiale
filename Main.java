@@ -15,8 +15,6 @@ import java.util.Arrays;
 
 /**
  * Clase principal. Inicializa todos los objetos que componen el sistema de control de acceso.
- * En las variables DETECTION_TIME_INIT_MOTION_SENSOR y DETECTION_TIME_FINALIZE_MOTION_SENSOR se especifica
- * la franja horaria en que se va a detectar movimiento, es decir se activa el sensor.
  * CONEXIONES DE LOS DEVICES:
  * # GPIO 2: Cerradura Magnética
  * # GPIO 3: Campana
@@ -44,12 +42,6 @@ public class Main {
      */
     public static void main(String[] args) {
             
-        
-        //VARIABLES
-        LocalTime DETECTION_TIME_INIT_MOTION_SENSOR = LocalTime.of(20,45); // El inicio de deteccion es a las 20 hs
-        LocalTime DETECTION_TIME_FINALIZE_MOTION_SENSOR = LocalTime.of(7,0); // La finalizacion de deteccion es a las 7.45 hs
-        
-        
         //CREACION MONITOR
         ProcesadorPetri proc = new ProcesadorPetri(31,31,"/home/pi/ProyectoIntegrador/SoftwareAdministrador/Matrices/MatrizIncidencia6.txt","/home/pi/ProyectoIntegrador/SoftwareAdministrador/Matrices/MatrizEstado6.txt");
         Monitor monitor = new Monitor(proc);
@@ -61,7 +53,7 @@ public class Main {
 
         //CREACION DE BASE DE DATOS
         DataBase dataBase = DataBaseFactory.getDataBase("/home/pi/ProyectoIntegrador/tesis/db.sqlite3","sqlite3"); 
-        
+        dataBase.connect();
         //CREACION DE FABRICAS
         DeviceFactory factoryGPIO = new GPIODeviceFactory();
         DeviceFactory factoryCamera = new CameraDeviceFactory();
