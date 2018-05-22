@@ -40,7 +40,7 @@ public class GpioListenerMovement extends Device  implements Runnable {
         pin = RaspiPin.getPinByAddress(pinNumber);
         myButton = gpio.provisionDigitalInputPin(pin, PinPullResistance.PULL_DOWN);
         myButton.setShutdownOptions(true);
-        myButton.setDebounce(500);
+        myButton.setDebounce(200);
     }
 
     /**
@@ -148,6 +148,4 @@ public class GpioListenerMovement extends Device  implements Runnable {
     public int getPinState(){
         return 0;
     }
-
-    
 }

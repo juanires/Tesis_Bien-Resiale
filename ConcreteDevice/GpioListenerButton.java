@@ -40,7 +40,7 @@ public class GpioListenerButton extends Device {
         pin = RaspiPin.getPinByAddress(pinNumber);
         myButton = gpio.provisionDigitalInputPin(pin, PinPullResistance.PULL_DOWN);
         myButton.setShutdownOptions(true);
-        myButton.setDebounce(1000); //Para evitar rebotes
+        myButton.setDebounce(200); //Para evitar rebotes
     }
 
     /**
